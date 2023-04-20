@@ -270,4 +270,4 @@ export default {
 </script>
 
 // import style.css
-<style src="C:\Repositories\Banking System\src\styles.css"></style>
+<style src="../assets/css/styles.css"></style>

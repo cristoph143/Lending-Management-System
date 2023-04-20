@@ -117,166 +117,166 @@
 </template>
 
 <script>
-export default {
-  name: "FixedInterest",
-  data() {
-    return {
-      loanAmount: 0,
-      loanTerm: 0,
-      interestRate: 0.05,
-      monthlyPayment: 0,
-      totalInterest: 0,
-      processingFee: 0,
-      paymentFrequency: 1,
-      numberOfPayments: 0,
-      show: false,
-      extra_payments: 0,
-    };
-  },
-  methods: {
-    enterAmount() {
-      console.log(this.loanAmount);
-    },
-    calculatePaymentPeriod() {
-      // if inout is empty, alert and show is false
-      if (this.loanAmount == 0 || this.loanTerm == 0) {
-        alert("Please enter loan amount and loan term");
-        this.show = false;
-      }
-      this.show = true;
-      let numberOfPayments = this.number_of_payments();
-      // alert(numberOfPayments)
-      this.numberOfPayments = numberOfPayments;
-      // call monthly_payment function
-      let monthlyPayment = this.monthly_payment(numberOfPayments);
-      // alert(monthlyPayment)
-      this.monthlyPayment = monthlyPayment;
-    },
-    number_of_payments() {
-      let loanTerm = this.loanTerm;
-      let paymentFrequency = this.paymentFrequency;
-      let numberOfPayments = 0;
-
-      // if payment frequency is 365
-      if (paymentFrequency == 365) {
-        numberOfPayments = (paymentFrequency / 12) * loanTerm;
-        // roundup
-        numberOfPayments = Math.ceil(numberOfPayments);
-      }
-      // if payment frequency is 52
-      else if (paymentFrequency == 52) {
-        numberOfPayments = (paymentFrequency / 12) * loanTerm;
-        // roundup
-        numberOfPayments = Math.ceil(numberOfPayments);
-      }
-      // if payment frequency is 2
-      else if (paymentFrequency == 2 || paymentFrequency == 1) {
-        numberOfPayments = paymentFrequency * loanTerm;
-      }
-      return numberOfPayments;
-    },
-    monthly_payment(numberOfPayments) {
-      let loanAmount = this.loanAmount;
-      let monthlyPayment = 0;
-      let total_interest_rate = this.interest_rate();
-      monthlyPayment = (
-        (loanAmount + total_interest_rate) /
-        numberOfPayments
-      ).toFixed(2);
-
-      return monthlyPayment;
-    },
-    interest_rate() {
-      let loanAmount = this.loanAmount;
-      let interestRate = this.interestRate;
-      let loanTerm = this.loanTerm;
-      let totalInterestRate = 0;
-      totalInterestRate = loanAmount * interestRate * loanTerm;
-      return totalInterestRate;
-    },
-    calculateMonthlyPayment() {
-      let monthlyPayment = this.monthlyPayment;
-      let numberOfPayments = this.numberOfPayments;
-      let payments = [];
-      let paymentNumber = 1;
-      let paymentDate = new Date();
-      let paymentAmount = 0;
-      let principal = 0;
-      let interest = 0;
-      let payment = {};
-      let beginning_balance = this.loanAmount;
-      let ending_balance = beginning_balance;
-      let number_of_payments = this.number_of_payments();
-      payment = {
-        paymentNumber: 0,
-        paymentDate: paymentDate.toLocaleDateString(),
-        beginning_balance: beginning_balance.toFixed(2),
-        paymentAmount: paymentAmount.toFixed(2),
-        principal: principal.toFixed(2),
-        interest: interest.toFixed(2),
-        ending_balance: ending_balance.toFixed(2),
+  export default {
+    name: "FixedInterest",
+    data() {
+      return {
+        loanAmount: 0,
+        loanTerm: 0,
+        interestRate: 0.05,
+        monthlyPayment: 0,
+        totalInterest: 0,
+        processingFee: 0,
+        paymentFrequency: 1,
+        numberOfPayments: 0,
+        show: false,
+        extra_payments: 0,
       };
-      // push payment object to payments array
-      payments.push(payment);
+    },
+    methods: {
+      enterAmount() {
+        console.log(this.loanAmount);
+      },
+      calculatePaymentPeriod() {
+        // if inout is empty, alert and show is false
+        if (this.loanAmount == 0 || this.loanTerm == 0) {
+          alert("Please enter loan amount and loan term");
+          this.show = false;
+        }
+        this.show = true;
+        let numberOfPayments = this.number_of_payments();
+        // alert(numberOfPayments)
+        this.numberOfPayments = numberOfPayments;
+        // call monthly_payment function
+        let monthlyPayment = this.monthly_payment(numberOfPayments);
+        // alert(monthlyPayment)
+        this.monthlyPayment = monthlyPayment;
+      },
+      number_of_payments() {
+        let loanTerm = this.loanTerm;
+        let paymentFrequency = this.paymentFrequency;
+        let numberOfPayments = 0;
 
-      // loop through the number of payments
-      for (let i = 0; i < numberOfPayments; i++) {
-        // calculate beginning balance
-        beginning_balance = ending_balance;
-        // calculate interest
-        interest = this.interest_rate() / number_of_payments;
-        // calculate principal
-        principal = monthlyPayment - interest;
-        // calculate balance
-        ending_balance = beginning_balance - principal;
-        // calculate payment date
-        paymentDate = new Date(
-          paymentDate.setMonth(paymentDate.getMonth() + 1)
-        );
-        // create payment object
+        // if payment frequency is 365
+        if (paymentFrequency == 365) {
+          numberOfPayments = (paymentFrequency / 12) * loanTerm;
+          // roundup
+          numberOfPayments = Math.ceil(numberOfPayments);
+        }
+        // if payment frequency is 52
+        else if (paymentFrequency == 52) {
+          numberOfPayments = (paymentFrequency / 12) * loanTerm;
+          // roundup
+          numberOfPayments = Math.ceil(numberOfPayments);
+        }
+        // if payment frequency is 2
+        else if (paymentFrequency == 2 || paymentFrequency == 1) {
+          numberOfPayments = paymentFrequency * loanTerm;
+        }
+        return numberOfPayments;
+      },
+      monthly_payment(numberOfPayments) {
+        let loanAmount = this.loanAmount;
+        let monthlyPayment = 0;
+        let total_interest_rate = this.interest_rate();
+        monthlyPayment = (
+          (loanAmount + total_interest_rate) /
+          numberOfPayments
+        ).toFixed(2);
+
+        return monthlyPayment;
+      },
+      interest_rate() {
+        let loanAmount = this.loanAmount;
+        let interestRate = this.interestRate;
+        let loanTerm = this.loanTerm;
+        let totalInterestRate = 0;
+        totalInterestRate = loanAmount * interestRate * loanTerm;
+        return totalInterestRate;
+      },
+      calculateMonthlyPayment() {
+        let monthlyPayment = this.monthlyPayment;
+        let numberOfPayments = this.numberOfPayments;
+        let payments = [];
+        let paymentNumber = 1;
+        let paymentDate = new Date();
+        let paymentAmount = 0;
+        let principal = 0;
+        let interest = 0;
+        let payment = {};
+        let beginning_balance = this.loanAmount;
+        let ending_balance = beginning_balance;
+        let number_of_payments = this.number_of_payments();
         payment = {
-          paymentNumber: paymentNumber,
+          paymentNumber: 0,
           paymentDate: paymentDate.toLocaleDateString(),
           beginning_balance: beginning_balance.toFixed(2),
-          paymentAmount: this.monthlyPayment,
+          paymentAmount: paymentAmount.toFixed(2),
           principal: principal.toFixed(2),
           interest: interest.toFixed(2),
           ending_balance: ending_balance.toFixed(2),
         };
         // push payment object to payments array
         payments.push(payment);
-        // increment payment number
-        paymentNumber++;
-      }
-      // set payments
-      this.payments = payments;
-      console.table(this.payments);
+
+        // loop through the number of payments
+        for (let i = 0; i < numberOfPayments; i++) {
+          // calculate beginning balance
+          beginning_balance = ending_balance;
+          // calculate interest
+          interest = this.interest_rate() / number_of_payments;
+          // calculate principal
+          principal = monthlyPayment - interest;
+          // calculate balance
+          ending_balance = beginning_balance - principal;
+          // calculate payment date
+          paymentDate = new Date(
+            paymentDate.setMonth(paymentDate.getMonth() + 1)
+          );
+          // create payment object
+          payment = {
+            paymentNumber: paymentNumber,
+            paymentDate: paymentDate.toLocaleDateString(),
+            beginning_balance: beginning_balance.toFixed(2),
+            paymentAmount: this.monthlyPayment,
+            principal: principal.toFixed(2),
+            interest: interest.toFixed(2),
+            ending_balance: ending_balance.toFixed(2),
+          };
+          // push payment object to payments array
+          payments.push(payment);
+          // increment payment number
+          paymentNumber++;
+        }
+        // set payments
+        this.payments = payments;
+        console.table(this.payments);
+      },
+      clearForm() {
+        // clear the form
+        this.loanAmount = 0;
+        this.loanTerm = 0;
+        this.interestRate = 0;
+        this.paymentFrequency = 0;
+        this.show = false;
+      },
     },
-    clearForm() {
-      // clear the form
-      this.loanAmount = 0;
-      this.loanTerm = 0;
-      this.interestRate = 0;
-      this.paymentFrequency = 0;
-      this.show = false;
+    // watch values in form
+    watch: {
+      loanAmount: function () {
+        this.enterAmount();
+      },
+      loanTerm: function () {
+        this.enterAmount();
+      },
+      paymentFrequency: function () {
+        this.enterAmount();
+      },
+      numberOfPayments: function () {
+        this.calculatePaymentPeriod();
+      },
     },
-  },
-  // watch values in form
-  watch: {
-    loanAmount: function () {
-      this.enterAmount();
-    },
-    loanTerm: function () {
-      this.enterAmount();
-    },
-    paymentFrequency: function () {
-      this.enterAmount();
-    },
-    numberOfPayments: function () {
-      this.calculatePaymentPeriod();
-    },
-  },
-};
+  };
 </script>
 
-<style src="C:\Repositories\Banking System\src\styles.css"></style>
+<style src="../assets/css/styles.css"></style>

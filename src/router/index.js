@@ -14,7 +14,7 @@ const routes = [{
     component: () =>
         import ( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
 }, {
-    path: "/diminishing",
+    path: "/diminishing-interest",
     name: "diminishing",
     component: () =>
         import (
@@ -22,23 +22,28 @@ const routes = [{
             "../views/diminishingInterest.vue"
         ),
 }, {
-    path: "/fixed",
+    path: "/fixed-interest",
     name: "fixed",
     component: () =>
         import ( /* webpackChunkName: "fixed" */ "../views/FixedInterest.vue"),
 }, {
-    path: "/lumpsum",
+    path: "/lump-sum",
     name: "lumpsum",
     component: () =>
         import ( /* webpackChunkName: "lumpsum" */ "../views/LumpSum.vue"),
 }, {
-    path: "/penalty",
+    path: "/penalty-calculator",
     name: "penalty",
     component: () =>
         import (
             /* webpackChunkName: "penalty" */
             "../views/PenaltyCalculator.vue"
         ),
+}, {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () =>
+        import ( /* webpackChunkName: "not-found" */ '../views/NotFoundView.vue'),
 }, ];
 
 const router = createRouter({

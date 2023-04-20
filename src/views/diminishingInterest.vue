@@ -128,258 +128,263 @@
 </template>
 
 <script>
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
-export default {
-  name: "DiminishingInterest",
-  data() {
-    return {
-      loanAmount: 0,
-      loanTerm: 0,
-      interestRate: 0.01,
-      monthlyPayment: 0,
-      totalInterest: 0,
-      processingFee: 0,
-      paymentFrequency: 1,
-      numberOfPayments: 0,
-      show: false,
-      extra_payments: 0,
-    };
-  },
-  methods: {
-    enterAmount() {
-      console.log(this.loanAmount);
+  import { jsPDF } from "jspdf";
+  import autoTable from "jspdf-autotable";
+  export default {
+    name: "DiminishingInterest",
+    data() {
+      return {
+        loanAmount: 0,
+        loanTerm: 0,
+        interestRate: 0.01,
+        monthlyPayment: 0,
+        totalInterest: 0,
+        processingFee: 0,
+        paymentFrequency: 1,
+        numberOfPayments: 0,
+        show: false,
+        extra_payments: 0,
+      };
     },
-    calculatePaymentPeriod() {
-      // if inout is empty, alert and show is false
-      if (this.loanAmount == 0 || this.loanTerm == 0) {
-        alert("Please enter loan amount and loan term");
-        this.show = false;
-      }
-      this.show = true;
-      let numberOfPayments = this.number_of_payments();
-      // alert(numberOfPayments)
-      this.numberOfPayments = numberOfPayments;
-      // call monthly_payment function
-      let monthlyPayment = this.monthly_payment();
-      // alert(monthlyPayment)
-      this.monthlyPayment = monthlyPayment;
-    },
-    number_of_payments() {
-      let loanTerm = this.loanTerm;
-      let paymentFrequency = this.paymentFrequency;
-      let numberOfPayments = 0;
+    methods: {
+      enterAmount() {
+        console.log(this.loanAmount);
+      },
+      calculatePaymentPeriod() {
+        // if inout is empty, alert and show is false
+        if (this.loanAmount == 0 || this.loanTerm == 0) {
+          alert("Please enter loan amount and loan term");
+          this.show = false;
+        }
+        this.show = true;
+        let numberOfPayments = this.number_of_payments();
+        // alert(numberOfPayments)
+        this.numberOfPayments = numberOfPayments;
+        // call monthly_payment function
+        let monthlyPayment = this.monthly_payment();
+        // alert(monthlyPayment)
+        this.monthlyPayment = monthlyPayment;
+      },
+      number_of_payments() {
+        let loanTerm = this.loanTerm;
+        let paymentFrequency = this.paymentFrequency;
+        let numberOfPayments = 0;
 
-      // if payment frequency is 365
-      if (paymentFrequency == 365) {
-        numberOfPayments = (paymentFrequency / 12) * loanTerm;
-        // roundup
-        numberOfPayments = Math.ceil(numberOfPayments);
-      }
-      // if payment frequency is 52
-      else if (paymentFrequency == 52) {
-        numberOfPayments = (paymentFrequency / 12) * loanTerm;
-        // roundup
-        numberOfPayments = Math.ceil(numberOfPayments);
-      }
-      // if payment frequency is 2
-      else if (paymentFrequency == 2 || paymentFrequency == 1) {
-        numberOfPayments = paymentFrequency * loanTerm;
-      }
-      return numberOfPayments;
-    },
-    monthly_payment() {
-      let loanAmount = this.loanAmount;
-      let numberOfPayments = this.numberOfPayments;
-      // let interestRate = this.interestRate;
-      let monthlyPayment = 0;
-      let paymentFrequency = this.paymentFrequency;
-      let tot_interest = this.total_interest_rate(paymentFrequency);
-      monthlyPayment = this.pmt(tot_interest, numberOfPayments, loanAmount, 0);
-      return monthlyPayment;
-    },
-    pmt(rate, nper, pv, fv, type) {
-      /*
+        // if payment frequency is 365
+        if (paymentFrequency == 365) {
+          numberOfPayments = (paymentFrequency / 12) * loanTerm;
+          // roundup
+          numberOfPayments = Math.ceil(numberOfPayments);
+        }
+        // if payment frequency is 52
+        else if (paymentFrequency == 52) {
+          numberOfPayments = (paymentFrequency / 12) * loanTerm;
+          // roundup
+          numberOfPayments = Math.ceil(numberOfPayments);
+        }
+        // if payment frequency is 2
+        else if (paymentFrequency == 2 || paymentFrequency == 1) {
+          numberOfPayments = paymentFrequency * loanTerm;
+        }
+        return numberOfPayments;
+      },
+      monthly_payment() {
+        let loanAmount = this.loanAmount;
+        let numberOfPayments = this.numberOfPayments;
+        // let interestRate = this.interestRate;
+        let monthlyPayment = 0;
+        let paymentFrequency = this.paymentFrequency;
+        let tot_interest = this.total_interest_rate(paymentFrequency);
+        monthlyPayment = this.pmt(
+          tot_interest,
+          numberOfPayments,
+          loanAmount,
+          0
+        );
+        return monthlyPayment;
+      },
+      pmt(rate, nper, pv, fv, type) {
+        /*
         nper = number of payments
         pv = present value / loan amount
         fv = future value
         type = 0 for end of period, 1 for beginning of period
       */
-      if (!fv) fv = 0;
-      if (!type) type = 0;
+        if (!fv) fv = 0;
+        if (!type) type = 0;
 
-      if (rate == 0) return -(pv + fv) / nper;
-      // present value interest factor
-      var pvif = Math.pow(1 + rate, nper);
-      var pmt = (rate / (pvif - 1)) * (pv * pvif + fv);
+        if (rate == 0) return -(pv + fv) / nper;
+        // present value interest factor
+        var pvif = Math.pow(1 + rate, nper);
+        var pmt = (rate / (pvif - 1)) * (pv * pvif + fv);
 
-      if (type == 1) {
-        pmt /= 1 + rate;
-      }
+        if (type == 1) {
+          pmt /= 1 + rate;
+        }
 
-      return pmt.toFixed(2);
-    },
-    calculateMonthlyPayment() {
-      let monthlyPayment = this.monthlyPayment;
-      let numberOfPayments = this.numberOfPayments;
-      let totalInterest = 0;
-      // let balance = this.loanAmount;
-      let payments = [];
-      let paymentNumber = 1;
-      let paymentDate = new Date();
-      let paymentAmount = 0;
-      let principal = 0;
-      let interest = 0;
-      let payment = {};
-      let beginning_balance = this.loanAmount;
-      let ending_balance = beginning_balance;
-      let paymentFrequency = this.paymentFrequency;
-      let interestRate = this.total_interest_rate(paymentFrequency);
-      // this.show = true;
-      payment = {
-        paymentNumber: 0,
-        paymentDate: paymentDate.toLocaleDateString(),
-        beginning_balance: beginning_balance.toFixed(2),
-        paymentAmount: paymentAmount.toFixed(2),
-        principal: principal.toFixed(2),
-        interest: interest.toFixed(2),
-        ending_balance: ending_balance.toFixed(2),
-      };
-      // push payment object to payments array
-      payments.push(payment);
-      // loop through the number of payments
-      for (let i = 0; i < numberOfPayments; i++) {
-        // calculate beginning balance
-        beginning_balance = ending_balance;
-        // calculate interest
-        interest = beginning_balance * interestRate;
-        // calculate principal
-        principal = monthlyPayment - interest;
-        // calculate balance
-        ending_balance = beginning_balance - principal;
-        // calculate total interest
-        totalInterest = totalInterest + interest;
-        // calculate payment date
-        paymentDate = new Date(
-          paymentDate.setMonth(paymentDate.getMonth() + 1)
-        );
-        // create payment object
+        return pmt.toFixed(2);
+      },
+      calculateMonthlyPayment() {
+        let monthlyPayment = this.monthlyPayment;
+        let numberOfPayments = this.numberOfPayments;
+        let totalInterest = 0;
+        // let balance = this.loanAmount;
+        let payments = [];
+        let paymentNumber = 1;
+        let paymentDate = new Date();
+        let paymentAmount = 0;
+        let principal = 0;
+        let interest = 0;
+        let payment = {};
+        let beginning_balance = this.loanAmount;
+        let ending_balance = beginning_balance;
+        let paymentFrequency = this.paymentFrequency;
+        let interestRate = this.total_interest_rate(paymentFrequency);
+        // this.show = true;
         payment = {
-          paymentNumber: paymentNumber,
+          paymentNumber: 0,
           paymentDate: paymentDate.toLocaleDateString(),
           beginning_balance: beginning_balance.toFixed(2),
-          paymentAmount: this.monthlyPayment,
+          paymentAmount: paymentAmount.toFixed(2),
           principal: principal.toFixed(2),
           interest: interest.toFixed(2),
           ending_balance: ending_balance.toFixed(2),
         };
         // push payment object to payments array
         payments.push(payment);
-        // increment payment number
-        paymentNumber++;
-      }
-      // set total interest
-      this.totalInterest = totalInterest;
-      // set payments
-      this.payments = payments;
-      console.table(this.payments);
-    },
-    total_interest_rate(paymentFrequency) {
-      let totalInterestRate = 0;
-      // check if paymentFrequency is equal to 365
-      if (paymentFrequency == 365) {
-        totalInterestRate = this.interestRate / (365 / 12);
-      }
-      // check if paymentFrequency is equal to 52
-      else if (paymentFrequency == 52) {
-        totalInterestRate = this.interestRate / (52 / 12);
-      }
-      // check if paymentFrequency is equal to 2
-      else if (paymentFrequency == 2) {
-        totalInterestRate = this.interestRate / 2;
-      }
-      // check if paymentFrequency is equal to 1
-      else if (paymentFrequency == 1) {
-        totalInterestRate = this.interestRate;
-      }
-      return totalInterestRate;
-    },
-    clearForm() {
-      // clear the form
-      this.loanAmount = 0;
-      this.loanTerm = 0;
-      this.interestRate = 0;
-      this.paymentFrequency = 0;
-      this.show = false;
-    },
-    downloadPDF() {
-      // get the table data
-      let payments = this.payments;
-      // get the table header
-      let header = Object.keys(payments[0]);
-      // create a new jsPDF instance
-      let doc = new jsPDF("p", "pt");
-      console.log(payments);
-      // import jsPDF autoTable plugin and call autoTable function
-      autoTable(doc, {
-        head: [header],
-        // display the body with the value of [payments] and convert it to string
-        body: payments.map((payment) => {
-          return header.map((key) => {
-            return String(payment[key]);
-          });
-        }),
-        theme: "grid",
-        styles: {
-          overflow: "linebreak",
-          fontSize: 8,
-        },
-        columnStyles: {
-          paymentNumber: { align: "center" },
-          paymentDate: { align: "center" },
-          beginning_balance: { align: "center" },
-          paymentAmount: { align: "center" },
-          principal: { align: "center" },
-          interest: { align: "center" },
-          ending_balance: { align: "center" },
-        },
-        margin: { top: 80 },
-        // use didDrawPage
-        didDrawPage: function (data) {
-          // set font size
-          doc.setFontSize(30);
-          // set font type
-          doc.setFont("helvetica");
-          // set text color to red
-          doc.setTextColor(255, 0, 0);
-          // add text
-          doc.text(
-            "Amortization Schedule",
-            data.settings.margin.left + 100,
-            50
+        // loop through the number of payments
+        for (let i = 0; i < numberOfPayments; i++) {
+          // calculate beginning balance
+          beginning_balance = ending_balance;
+          // calculate interest
+          interest = beginning_balance * interestRate;
+          // calculate principal
+          principal = monthlyPayment - interest;
+          // calculate balance
+          ending_balance = beginning_balance - principal;
+          // calculate total interest
+          totalInterest = totalInterest + interest;
+          // calculate payment date
+          paymentDate = new Date(
+            paymentDate.setMonth(paymentDate.getMonth() + 1)
           );
-        },
-      });
-      // save the pdf
-      doc.save("table.pdf");
+          // create payment object
+          payment = {
+            paymentNumber: paymentNumber,
+            paymentDate: paymentDate.toLocaleDateString(),
+            beginning_balance: beginning_balance.toFixed(2),
+            paymentAmount: this.monthlyPayment,
+            principal: principal.toFixed(2),
+            interest: interest.toFixed(2),
+            ending_balance: ending_balance.toFixed(2),
+          };
+          // push payment object to payments array
+          payments.push(payment);
+          // increment payment number
+          paymentNumber++;
+        }
+        // set total interest
+        this.totalInterest = totalInterest;
+        // set payments
+        this.payments = payments;
+        console.table(this.payments);
+      },
+      total_interest_rate(paymentFrequency) {
+        let totalInterestRate = 0;
+        // check if paymentFrequency is equal to 365
+        if (paymentFrequency == 365) {
+          totalInterestRate = this.interestRate / (365 / 12);
+        }
+        // check if paymentFrequency is equal to 52
+        else if (paymentFrequency == 52) {
+          totalInterestRate = this.interestRate / (52 / 12);
+        }
+        // check if paymentFrequency is equal to 2
+        else if (paymentFrequency == 2) {
+          totalInterestRate = this.interestRate / 2;
+        }
+        // check if paymentFrequency is equal to 1
+        else if (paymentFrequency == 1) {
+          totalInterestRate = this.interestRate;
+        }
+        return totalInterestRate;
+      },
+      clearForm() {
+        // clear the form
+        this.loanAmount = 0;
+        this.loanTerm = 0;
+        this.interestRate = 0;
+        this.paymentFrequency = 0;
+        this.show = false;
+      },
+      downloadPDF() {
+        // get the table data
+        let payments = this.payments;
+        // get the table header
+        let header = Object.keys(payments[0]);
+        // create a new jsPDF instance
+        let doc = new jsPDF("p", "pt");
+        console.log(payments);
+        // import jsPDF autoTable plugin and call autoTable function
+        autoTable(doc, {
+          head: [header],
+          // display the body with the value of [payments] and convert it to string
+          body: payments.map((payment) => {
+            return header.map((key) => {
+              return String(payment[key]);
+            });
+          }),
+          theme: "grid",
+          styles: {
+            overflow: "linebreak",
+            fontSize: 8,
+          },
+          columnStyles: {
+            paymentNumber: { align: "center" },
+            paymentDate: { align: "center" },
+            beginning_balance: { align: "center" },
+            paymentAmount: { align: "center" },
+            principal: { align: "center" },
+            interest: { align: "center" },
+            ending_balance: { align: "center" },
+          },
+          margin: { top: 80 },
+          // use didDrawPage
+          didDrawPage: function (data) {
+            // set font size
+            doc.setFontSize(30);
+            // set font type
+            doc.setFont("helvetica");
+            // set text color to red
+            doc.setTextColor(255, 0, 0);
+            // add text
+            doc.text(
+              "Amortization Schedule",
+              data.settings.margin.left + 100,
+              50
+            );
+          },
+        });
+        // save the pdf
+        doc.save("table.pdf");
+      },
     },
-  },
-  // watch values in form
-  watch: {
-    loanAmount: function () {
-      this.enterAmount();
+    // watch values in form
+    watch: {
+      loanAmount: function () {
+        this.enterAmount();
+      },
+      loanTerm: function () {
+        this.enterAmount();
+      },
+      paymentFrequency: function () {
+        this.enterAmount();
+      },
+      numberOfPayments: function () {
+        this.calculatePaymentPeriod();
+      },
     },
-    loanTerm: function () {
-      this.enterAmount();
-    },
-    paymentFrequency: function () {
-      this.enterAmount();
-    },
-    numberOfPayments: function () {
-      this.calculatePaymentPeriod();
-    },
-  },
-};
+  };
 </script>
 
-<style src="C:\Repositories\Banking System\src\styles.css"></style>
+<style src="../assets/css/styles.css"></style>
