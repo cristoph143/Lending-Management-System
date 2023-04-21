@@ -37,7 +37,6 @@
   .home {
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
 
   /* make the outline of the boxes 2 at the top and 2 at the bottom */

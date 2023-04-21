@@ -12,12 +12,12 @@ const routes = [{
     path: "/about",
     name: "about",
     component: () =>
-        import ( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
+        import( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
 }, {
     path: "/diminishing-interest",
     name: "diminishing",
     component: () =>
-        import (
+        import(
             /* webpackChunkName: "diminishing" */
             "../views/diminishingInterest.vue"
         ),
@@ -25,26 +25,31 @@ const routes = [{
     path: "/fixed-interest",
     name: "fixed",
     component: () =>
-        import ( /* webpackChunkName: "fixed" */ "../views/FixedInterest.vue"),
+        import( /* webpackChunkName: "fixed" */ "../views/FixedInterest.vue"),
 }, {
     path: "/lump-sum",
     name: "lumpsum",
     component: () =>
-        import ( /* webpackChunkName: "lumpsum" */ "../views/LumpSum.vue"),
+        import( /* webpackChunkName: "lumpsum" */ "../views/LumpSum.vue"),
 }, {
     path: "/penalty-calculator",
     name: "penalty",
     component: () =>
-        import (
+        import(
             /* webpackChunkName: "penalty" */
             "../views/PenaltyCalculator.vue"
         ),
 }, {
+    path: "/calculate",
+    name: "PreCalculate",
+    component: () =>
+        import( /* webpackChunkName: "PreCalculate" */ "../views/PreCalculate.vue"),
+}, {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () =>
-        import ( /* webpackChunkName: "not-found" */ '../views/NotFoundView.vue'),
-}, ];
+        import( /* webpackChunkName: "not-found" */ '../views/NotFoundView.vue'),
+},];
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
