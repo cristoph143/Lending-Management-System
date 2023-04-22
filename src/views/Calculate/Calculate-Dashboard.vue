@@ -63,18 +63,19 @@
   .tabs {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 50%;
     height: 50px;
     background-color: #f5f5f5;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
   }
 
   .tabs a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 120px;
+    width: 100%;
     height: 100%;
     color: #000000;
     text-decoration: none;
@@ -100,6 +101,7 @@
     .tabs {
       flex-direction: column;
       height: auto;
+      width: 100%;
     }
 
     .tabs a {

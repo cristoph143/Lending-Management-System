@@ -6,7 +6,6 @@
 </template>
 
 <script>
-  //   import CalcTabLayout from "@/components/CalcTabLayout";
   import store from "@/store"; // import the store
   import { mapState } from "vuex";
   export default {
@@ -19,6 +18,6 @@
     created() {
       this.$store = store;
       console.log(this.destinations);
-    }
+    },
   };
 </script>

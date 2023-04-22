@@ -1,10 +1,8 @@
 <template>
-  <!-- <div> -->
   <nav>
     <TheNavigation />
   </nav>
   <router-view />
-  <!-- </div> -->
 </template>
 
 <script>

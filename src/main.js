@@ -4,7 +4,7 @@ import {
 import App from './App.vue';
 import store from './store';
 import router from './router'
-import '../src/assets/css/main.css'
+import '../src/assets/styles/css/main.css'
 import Vueform from '@vueform/vueform/plugin'
 import vueformConfig from '../vue-form.config'
 

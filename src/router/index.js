@@ -14,24 +14,6 @@ const routes = [{
     component: () =>
         import( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
 }, {
-    path: "/diminishing-interest",
-    name: "diminishing",
-    component: () =>
-        import(
-            /* webpackChunkName: "diminishing" */
-            "../views/diminishingInterest.vue"
-        ),
-}, {
-    path: "/fixed-interest",
-    name: "fixed",
-    component: () =>
-        import( /* webpackChunkName: "fixed" */ "../views/FixedInterest.vue"),
-}, {
-    path: "/lump-sum",
-    name: "lumpsum",
-    component: () =>
-        import( /* webpackChunkName: "lumpsum" */ "../views/LumpSum.vue"),
-}, {
     path: "/calculate",
     name: "calculate-dashboard",
     component: () =>
@@ -43,19 +25,6 @@ const routes = [{
             import( /* webpackChunkName: "calculate-view" */ "../views/Calculate/Calculate-View.vue"),
         props: true,
     },],
-}, {
-    path: "/calculate/:slug",
-    name: "calculate_page",
-    component: () =>
-        import( /* webpackChunkName: "calculate_page" */ "../views/TheCalcValue.vue"),
-}, {
-    path: "/penalty-calculator",
-    name: "penalty",
-    component: () =>
-        import(
-            /* webpackChunkName: "penalty" */
-            "../views/PenaltyCalculator.vue"
-        ),
 }, {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
