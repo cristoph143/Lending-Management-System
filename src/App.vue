@@ -1,7 +1,10 @@
 <template>
-  <nav>
+  <header>
+    <HeaderComponent />
+  </header>
+  <!-- <nav>
     <TheNavigation />
-  </nav>
+  </nav> -->
   <router-view />
 </template>
 
@@ -9,11 +12,12 @@
   /* eslint-disable */
   import TheNavigation from "@/components/TheNavigation";
   import store from "@/store"; // import the store
-
+  import HeaderComponent from "../src/components/Common/HeaderComponent.vue";
   export default {
     name: "App",
     components: {
       TheNavigation,
+      HeaderComponent,
     },
     // register the store with the Vue instance
     created() {
