@@ -1,370 +1,209 @@
-/* Styles for header component */
-
-/* Mobile first styles */
-header {
-  position: relative;
-  z-index: 1;
-}
-
-.nav-desktop {
+.desktop-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  /* Other desktop styles */
 }
 
-.logo-company {
-  display: flex;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.logo-company h1 {
-  margin-left: 0.5rem;
-}
-
-.apply-now {
-  display: none;
-}
-
-.account {
+.desktop-account {
   position: relative;
 }
 
-.account-button {
-  display: flex;
-  align-items: center;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  color: #1a1a1a;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.account-button img {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-}
-
-.account-dropdown {
+.account-menu {
   position: absolute;
   top: 100%;
   right: 0;
-  min-width: 10rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #ffffff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  list-style: none;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1;
+}
+
+.desktop-account:hover .account-menu {
+  display: block;
+}
+
+.account-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
   text-align: left;
-}
-
-.account-dropdown li {
-  margin-bottom: 0.5rem;
-}
-
-.account-dropdown li:last-child {
-  margin-bottom: 0;
-}
-
-.menu-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: none;
   background-color: transparent;
   cursor: pointer;
-  color: #1a1a1a;
-  font-size: 1.5rem;
+  font-size: 16px;
 }
 
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  transform: translateX(-100%);
+.account-menu button:hover {
+  background-color: #f2f2f2;
+}
+.accent-button {
+  background-color: #f6b319; 
+  color: #ffffff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 4px; 
+  cursor: pointer;
+}
+.mobile-header {
+  display: none;
+  /* Other mobile styles */
+}
+.responsive-img {
+  max-width: 50px;
+  height: auto;
 }
 
-.mobile-menu.active {
-  transform: translateX(0);
+.accent-button:hover {
+  background-color: #e59f16; /* Set the background color when hovering over the button */
 }
 
-.mobile-menu a {
-  display: block;
-  padding: 1rem 0;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #1a1a1a;
-  border-bottom: 1px solid #f2f2f2;
+.logo-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.mobile-menu a:last-child {
-  border-bottom: none;
-}
-
-.mobile-menu .accent-button {
-  display: block;
-  margin-top: 1.5rem;
-}
-
-.mobile-menu .account-dropdown {
-  position: static;
-  margin-top: 1.5rem;
-  padding: 0;
-  box-shadow: none;
-}
-
-.mobile-menu .account-dropdown li {
-  margin-bottom: 0;
-}
-
-/* Styles for tablet screens and up */
-@media only screen and (min-width: 768px) {
-  .logo-company h1 {
-    margin-left: 1rem;
+@media screen and (max-width: 768px) {
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .desktop-account {
+    display: none;
+  }
+  .close-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .close-button img {
+    height: 20px;
+    width: 20px;
   }
 
-  .nav-desktop {
-    padding: 1.5rem 3rem;
+  .mobile-account {
+    display: block;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+  }
+
+  .mobile-account button {
+    display: block;
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .mobile-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+    padding: 0 1rem;
   }
   
-  .logo-company {
+  .logo-title-container {
     display: flex;
     align-items: center;
-  }
-  
-  .logo-company h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-left: 1rem;
-    color: #333;
-  }
-  
-  .nav-links {
-    display: flex;
-    align-items: center;
-  }
-  
-  .nav-links a {
-    color: #333;
-    font-size: 1.2rem;
-    margin-right: 2rem;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .nav-links a.active,
-  .nav-links a:hover {
-    color: #0077ff;
-  }
-  
-  .apply-now button {
-    background-color: #0077ff;
-    color: #fff;
-    font-size: 1.2rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 2rem;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
   }
   
-  .apply-now button:hover {
-    background-color: #0066cc;
-  }
-  
-  .account-button {
-    display: flex;
-    align-items: center;
-    background-color: transparent;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .account-button img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
+  .logo {
     margin-right: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
-  .account-button i {
-    margin-left: 0.5rem;
-  }
-  
-  .account-dropdown {
-    position: absolute;
-    top: 5rem;
-    right: 0;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: none;
-    z-index: 999;
-  }
-  
-  .account-dropdown li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .account-dropdown li:last-child {
-    margin-bottom: 0;
-  }
-  
-  .account-dropdown li a {
-    color: #333;
-    font-size: 1.2rem;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .account-dropdown li a:hover {
-    color: #0077ff;
-  }
-  
-  .menu-button {
-    background-color: transparent;
-    border: none;
+  .title {
     font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    margin: 0;
+  }
+  .desktop-header {
+    display: none;
   }
   
-  .slide-enter-active,
-  .slide-leave-active {
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .slide-enter,
-  .slide-leave-to {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-}
-  
-  @media screen and (max-width: 768px) {
-    .nav-desktop {
-      padding: 1rem 1.5rem;
-    }
-  
-    .logo-company h1 {
-      font-size: 1.2rem;
-    }
-  
-    .nav-links {
-      display: none;
-    }
-  
-    .menu-button {
-      display: flex;
-    }
-  
-    .mobile-menu {
-      position: fixed;
-      top: 4rem;
-      left: 0;
-      width: 100%;
-      padding: 1rem;
-      background-color: #fff;
-      z-index: 100;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      
-      .mobile-menu a {
-      display: block;
-      padding: 0.5rem 0;
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: #555;
-      text-decoration: none;
-      transition: color 0.2s;
-      }
-      
-      .mobile-menu a:hover,
-      .mobile-menu a.active {
-      color: #222;
-      }
-      
-      .mobile-menu .accent-button {
-      display: block;
-      margin-top: 1rem;
-      }
-      
-      .mobile-menu .account-links {
-      margin-top: 1rem;
-      }
-      
-      .mobile-menu .account-links a {
-      display: block;
-      padding: 0.5rem 0;
-      font-size: 1rem;
-      color: #555;
-      text-decoration: none;
-      transition: color 0.2s;
-      }
-      
-      .mobile-menu .account-links a:hover {
-      color: #222;
-      }
-      .mobile-menu a {
-        display: block;
-        padding: 1rem 0;
-        border-bottom: 1px solid #eee;
-        }
-        .mobile-menu a:last-child {
-        border-bottom: none;
-        }
-        .mobile-menu .accent-button {
-        display: block;
-        margin: 2rem auto 0;
-        }
-        .mobile-menu .account-dropdown {
-        margin-top: 1rem;
-        }
-        .mobile-menu .account-dropdown li {
-        margin-bottom: 0.5rem;
-        }
-        }
-        
-        @media (min-width: 1024px) {
-        .mobile-menu {
-        display: none;
-        }
-        }
-
-        /* CSS for desktop screens */
-.drawer {
-  display: none;
-}
-
-/* CSS for mobile screens */
-@media (max-width: 767px) {
-  .drawer {
+  .mobile-header {
     display: block;
   }
-  .company-profile {
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    z-index: 1000;
+    padding: 20px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .drawer.open {
+    transform: translateX(0);
+  }
+
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .drawer-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .drawer-header .close-drawer {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-account {
+    margin-bottom: 20px;
+  }
+
+  .account-dropdown {
+    width: 100%;
+    text-align: left;
+  }
+
+  .account-menu {
     display: none;
+  }
+
+  .account-menu.open {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .account-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 0;
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .account-menu button:hover {
+    background-color: #eee;
+  }
+
+  .account-menu .accent {
+    color: #fff;
+    background-color: #4caf50;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
   }
 }

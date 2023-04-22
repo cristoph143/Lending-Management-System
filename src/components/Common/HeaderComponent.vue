@@ -1,115 +1,121 @@
 <template>
-  <header>
-    <nav class="nav-desktop">
-      <div class="logo-company">
-        <img src="/path/to/logo.png" alt="Logo" />
+  <div class="header">
+    <div class="desktop-header" v-if="!isMobile">
+      <div class="logo">
+        <img src="../../assets/images/logo.png" class="responsive-img desktop-logo" alt="Logo" />
         <h1>Company Name</h1>
       </div>
-      <NavLinks />
-      <div class="apply-now">
-        <button class="accent">Apply Now</button>
-      </div>
-      <div class="account">
-        <button class="account-button" @click="isAccountDropdownOpen = !isAccountDropdownOpen">
-          <img v-if="isAuthenticated" :src="userAvatar" :alt="userName" />
-          <span v-if="isAuthenticated">{{ userName }}</span>
-          <span v-else>Account</span>
-          <i class="fas fa-caret-down"></i>
+      <NavLinks :activeLink="activeLink" />
+      <button class="apply-now accent-button">Apply Now</button>
+      <div class="account desktop-account">
+        <button class="account-dropdown accent-button" @click="accountMenuOpen = !accountMenuOpen">
+          <span v-if="auth">
+            <img class="avatar" :src="user.avatar" :alt="user.name" />
+            {{ user.name }}
+          </span>
+          <span v-else>
+            Account
+          </span>
         </button>
-        <ul class="account-dropdown" v-if="isAccountDropdownOpen">
-          <li v-if="isAuthenticated"><router-link :to="{ name: 'profile' }">Profile</router-link></li>
-          <li v-if="isAuthenticated"><router-link :to="{ name: 'settings' }">Settings</router-link></li>
-          <li v-if="isAuthenticated"><router-link :to="{ name: 'logout' }">Logout</router-link></li>
-          <li v-else-if="!isAuthenticated"><router-link :to="{ name: 'login' }">Login</router-link></li>
-          <li v-else><router-link :to="{ name: 'signup' }">Signup</router-link></li>
-        </ul>
+        <div class="account-menu" :class="{ open: accountMenuOpen }">
+          <div v-if="auth">
+            <button>Profile</button>
+            <button>Settings</button>
+            <button>Logout</button>
+          </div>
+          <div v-else>
+            <button class="accent">Login</button>
+            <button>Signup</button>
+          </div>
+        </div>
       </div>
-      <button class="menu-button" @click="isNavLinksOpen = !isNavLinksOpen">
-        <i class="fas fa-bars"></i>
-      </button>
-    </nav>
-    <NavLinks :is-open="isNavLinksOpen" />
-    <transition name="slide">
-  <nav class="mobile-menu" v-if="isSmallScreen && !isNavLinksOpen">
-    <a href="/" :class="{ active: activeLink === 'home' }">Home</a>
-    <a href="/about" :class="{ active: activeLink === 'about' }">About</a>
-    <a href="/contact" :class="{ active: activeLink === 'contact' }">Contact</a>
-    <button class="accent-button">Apply Now</button>
-    <div v-if="isAuthenticated">
-      <a href="/profile">{{ userName }}</a>
-      <a href="/logout">Logout</a>
     </div>
-    <div v-if="!isAuthenticated">
-      <a href="/login">Login</a>
-      <a href="/signup">Signup</a>
+    <div class="mobile-header"  v-if="isMobile">
+      <div class="logo-container" >
+  <img src="../../assets/images/logo.png" class="responsive-img" alt="Logo" @click.prevent="drawerOpen = true" />
+  <div class="company-name">
+    <h1>Company Name</h1>
+  </div>
+  <img class="hamburger responsive-img" src="../../assets/images/hamburger.png" alt="Hamburger" @click="drawerOpen = true" />
+</div>
+    <div class="drawer" :class="{ open: drawerOpen }" @click.self="drawerOpen = false">
+    <div class="drawer-header">
+      <div class="logo">
+        <img src="../../assets/images/logo.png" class="responsive-img" alt="Logo" />
+        <h1>Company Name</h1>
+      </div>
+      <button class="close-button" @click="drawerOpen = false">
+  <img src="../../assets/images/icon-close.png" alt="Close icon">
+</button>
     </div>
-  </nav>
-</transition>
-  </header>
+    <div class="mobile-header">
+      <div class="profile-info">
+        <img class="avatar" src="../../assets/images/logo.png" alt="Profile Image" />
+        <div class="profile-name">
+          <h4>John Doe</h4>
+          <a href="#">Profile</a>
+        </div>
+      </div>
+      <NavLinks :activeLink="activeLink" />
+      <div class="account mobile-account">
+        <button v-if="auth" class="accent-button" @click="logout">Logout</button>
+        <button v-else class="accent-button" @click="login">Login</button>
+      </div>
+    </div>
+    <div class="account desktop-account">
+      <button v-if="auth" class="accent-button" @click="logout">Logout</button>
+      <button v-else class="accent-button" @click="login">Login</button>
+    </div>
+  </div>
+
+    </div>
+  </div>
 </template>
-
-
 <script>
 import NavLinks from './NavLinks.vue';
 
 export default {
   name: 'HeaderComponent',
   components: {
-    NavLinks
+    NavLinks,
   },
   data() {
     return {
-      isAccountDropdownOpen: false,
-      isNavLinksOpen: false,
-      isDrawerOpen: false,
-    isSmallScreen: false,
-    }
-  },
-  computed: {
-    isAuthenticated() {
-      // Replace with your authentication logic
-      return true;
-    },
-    userAvatar() {
-      // Replace with the URL of the user's avatar
-      return 'https://via.placeholder.com/32';
-    },
-    userName() {
-      // Replace with the user's name
-      return 'John Doe';
-    },
-    activeLink() {
- return this.$route.name;  },
-  },
-  mounted() {
-    // Show the drawer when the screen is too small
-    this.checkScreenWidth();
-    window.addEventListener('resize', this.checkScreenWidth);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.checkScreenWidth);
-  window.removeEventListener("resize", this.checkScreenSize);
-  },
-  methods: {
-    checkScreenWidth() {
-      this.isDrawerOpen = window.innerWidth < 768;
-    },
-    checkScreenSize() {
-    this.isSmallScreen = window.innerWidth <= 768; // adjust the max width to fit your content
-  },
-  },
-  created() {
-  window.addEventListener("resize", this.checkScreenSize);
-  this.checkScreenSize();
+      activeLink: '',
+      auth: true, // Replace with your authentication state
+      user: {
+        name: 'John Doe', // Replace with the user's name
+        avatar: '../../assets/images/logo.png', // Replace with the path to the user's avatar
+      },
+      drawerOpen: false,
+      accountMenuOpen: false,
+    isMobile: false, // default to desktop
+  };
 },
-  watch: {
-    isNavLinksOpen(newValue) {
-      if (newValue) {
-        // Close the account dropdown when the NavLinks are opened
-        this.isAccountDropdownOpen = false;
-      }
+mounted() {
+  // Check screen size on mount
+  this.checkScreenSize();
+  // Add event listener to check on screen resize
+  window.addEventListener('resize', this.checkScreenSize);
+},
+beforeUnmount() {
+  // Remove event listener on component destroy
+  window.removeEventListener('resize', this.checkScreenSize);
+},
+methods: {
+  checkScreenSize() {
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    if (mobileQuery.matches) {
+      // Update isMobile to true if screen size is mobile
+      this.isMobile = true;
+    } else {
+      // Update isMobile to false if screen size is desktop
+      this.isMobile = false;
     }
-  }
-}
+  },
+},
+};
 </script>
-<style src="../../assets/styles/css/header.css"></style>
+
+<style src="../../assets/styles/css/header.css">
+</style>

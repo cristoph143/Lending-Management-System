@@ -1,67 +1,40 @@
 <template>
-  <nav class="nav-links" :class="{ open: isOpen }">
-    <a href="/" :class="{ active: activeLink === 'home' }">Home</a>
-    <a href="/about" :class="{ active: activeLink === 'about' }">About</a>
-    <a href="/contact" :class="{ active: activeLink === 'contact' }">Contact</a>
-  </nav>
+  <div class="nav-links">
+    <a href="/" :class="{ active: activeLink === '/' }">Home</a>
+    <a href="/about" :class="{ active: activeLink === '/about' }">About Us</a>
+    <a href="/services" :class="{ active: activeLink === '/services' }">Services</a>
+    <a href="/contact" :class="{ active: activeLink === '/contact' }">Contact Us</a>
+    <a href="/calculate" :class="{ active: activeLink === '/calculate' }">Calculate Loan</a>
+  </div>
 </template>
 
 <script>
 export default {
+  name: 'NavLinks',
   props: {
-    isOpen: {
-      type: Boolean,
-      default: false,
-    },
-    activeLink: {
-      type: String,
-      default: '',
-    },
+    activeLink: String,
   },
-  computed: {
-    currentRoute() {
-      return this.$route.path;
-    }
-  }
 };
 </script>
+
 <style>
-  .nav-links {
+.nav-links {
   display: flex;
-  justify-content: flex-end;
 }
 
-.nav-links ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.nav-links a {
+  display: block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
 }
 
-.nav-links li {
-  margin-right:
-  20px;
+.nav-links a:hover {
+  background-color: #f2f2f2;
 }
 
-.nav-links li:last-child {
-margin-right: 0;
+.nav-links .active {
+  font-weight: bold;
 }
-
-.nav-links li a {
-display: block;
-padding: 10px;
-color: #333;
-text-decoration: none;
-transition: background-color 0.3s ease-in-out;
-}
-
-.nav-links li.active a {
-font-weight: bold;
-}
-
-.nav-links li:hover a {
-background-color: #f4f4f4;
-}
-
-  </style>
-
+</style>
