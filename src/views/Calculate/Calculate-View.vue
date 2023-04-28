@@ -8,7 +8,7 @@
         <LoanCalculatorVue />
       </div>
       <div class="right">
-        <LoanCalculatorVue />
+        <DisplayCalcResult />
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@
   import store from "@/store";
   import { mapState } from "vuex";
   import LoanCalculatorVue from "@/components/Common/LoanCalculator.vue";
+  import DisplayCalcResult from "@/components/Common/DisplayCalcResult.vue";
 
   export default {
     name: "CalculateView",
@@ -32,6 +33,7 @@
     },
     components: {
       LoanCalculatorVue,
+      DisplayCalcResult
     },
   };
 </script>

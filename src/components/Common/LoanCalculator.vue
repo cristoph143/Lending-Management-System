@@ -1,16 +1,17 @@
 <template>
   <Vueform
+    ref="vueform"
     size="md"
     :display-errors="true"
     validate-on="step|change"
     :display-messages="true"
-    add-class="vf-loan-calculator"
+    add-class="formClass"
   >
     <GroupElement name="container">
       <SliderElement
         :name="loanAmountName"
         :label="loanAmountLabel"
-        :rules="loanAmountRules"
+        :rules="loanRules"
         :field-name="loanAmountFieldName"
         :default="loanAmountDefault"
         :max="loanAmountMax"
@@ -20,7 +21,7 @@
       <SliderElement
         :name="loanTermName"
         :label="loanTermLabel"
-        :rules="loanTermRules"
+        :rules="loanRules"
         :field-name="loanTermFieldName"
         :default="loanTermDefault"
         :max="loanTermMax"
@@ -30,11 +31,7 @@
       <SelectElement
         :name="paymentFrequencyName"
         :items="paymentFrequencyItems"
-        :search="paymentFrequencySearch"
-        :native="paymentFrequencyNative"
         :label="paymentFrequencyLabel"
-        :input-type="paymentFrequencyInputType"
-        :autocomplete="paymentFrequencyAutocomplete"
         :field-name="paymentFrequencyFieldName"
         :rules="paymentFrequencyRules"
         :id="paymentFrequencyId"
@@ -45,11 +42,11 @@
     <ButtonElement
       name="calculate_copy"
       button-label="Calculate"
-      :submits="true"
       id="calculate"
       :columns="{
         container: 4,
       }"
+      @click="calculatePayment"
     />
     <ButtonElement
       name="reset"
@@ -59,21 +56,25 @@
       :columns="{
         container: 3,
       }"
+      :conditions="resetConditions"
     />
   </Vueform>
 </template>
 
 <script>
+  import store from "@/store"; // import the store
+  import { mapState } from "vuex";
   export default {
     name: "LoanCalculator",
     data() {
       return {
-        displayErrors: true,
-        displayMessages: true,
+        paymentFrequencyId: "payment_frequency",
+        paymentFrequencyFieldName: "Payment Frequency",
+        paymentFrequencyLabel: "Payment Frequency",
         formClass: "vf-loan-calculator",
         loanAmountName: "loanAmount",
         loanAmountLabel: "Loan amount",
-        loanAmountRules: ["required"],
+        loanRules: ["required"],
         loanAmountFieldName: "loan-amount",
         loanAmountDefault: 1,
         loanAmountMax: 10000,
@@ -81,7 +82,6 @@
         loanAmountId: "loan-amount-slider",
         loanTermName: "loanTerm",
         loanTermLabel: "Loan term",
-        loanTermRules: ["required"],
         loanTermFieldName: "loan-term",
         loanTermDefault: 1,
         loanTermMax: 28,
@@ -106,7 +106,7 @@
             label: "Monthly",
           },
         ],
-        paymentFrequencyRules: ["required", "unique"],
+        paymentFrequencyRules: ["required"],
         paymentFrequencyDefault: "365",
         dividerContent: '<hr :style="dividerStyles" />',
         dividerStyles: {
@@ -116,35 +116,39 @@
         },
         resetConditions: [
           [
-            ["container_1", "container"],
-            [
-              {
-                name: "loanAmount",
-                value: 1,
-              },
-              {
-                name: "loanTerm",
-                value: 1,
-              },
-              {
-                name: "paymentFrequency",
-                value: "365",
-              },
-            ],
+            ["container.loanAmount", ">", "1"],
+            ["container.loanTerm", ">", "1"],
+            ["container.paymentFrequency", "not_in", ["365"]],
           ],
         ],
       };
     },
+    computed: {
+      ...mapState({
+        destinations: (state) => state.destination.destinations,
+      }),
+    },
+    created() {
+      this.$store = store;
+      console.log(this.destinations);
+    },
     methods: {
       calculatePayment() {
-        // Calculate the payment based on the input values
-        // ...
+        // Get the form data
+        const formData = this.$refs.vueform.data;
+        console.log(formData);
+
+        // Do the calculation based on the form data
+        // const paymentAmount =
+        //   formData.loanAmount / (formData.loanTerm * formData.paymentFrequency);
+
+        // // Log the payment amount
+        // console.log(paymentAmount);
       },
       resetForm() {
         // Reset the form to its initial values
-        // ...
+        this.$refs.vueform.resetForm();
       },
     },
   };
 </script>
-
