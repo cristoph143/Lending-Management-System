@@ -2,9 +2,6 @@
   <header>
     <HeaderComponent />
   </header>
-  <!-- <nav>
-    <TheNavigation />
-  </nav> -->
   <router-view />
 </template>
 
