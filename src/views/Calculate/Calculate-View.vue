@@ -5,7 +5,10 @@
     </div>
     <div class="lower">
       <div class="left">
-        <LoanCalculatorVue />
+        <PenaltyCalculatorVue
+          v-if="$route.params.slug === 'penalty-calculator'"
+        />
+        <LoanCalculatorVue v-else />
       </div>
       <div class="right">
         <DisplayCalcResult />
@@ -19,6 +22,7 @@
   import { mapState } from "vuex";
   import LoanCalculatorVue from "@/components/Common/LoanCalculator.vue";
   import DisplayCalcResult from "@/components/Common/DisplayCalcResult.vue";
+  import PenaltyCalculatorVue from "@/components/Common/PenaltyCalculator.vue";
 
   export default {
     name: "CalculateView",
@@ -33,66 +37,68 @@
     },
     components: {
       LoanCalculatorVue,
-      DisplayCalcResult
+      DisplayCalcResult,
+      PenaltyCalculatorVue,
     },
   };
 </script>
 
 <style scoped>
-.calculate-view-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.upper {
-  height: 20%;
-  background-color: lightblue;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.lower {
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.left {
-  background-color: lightgray;
-  padding: 50px 20px;
-}
-
-.right {
-  background-color: lightgray;
-  padding: 50px 20px;
-}
-
-@media screen and (min-width: 768px) {
-  .lower {
-    flex-direction: row;
+  .calculate-view-container {
+    display: flex;
+    flex-direction: column;
     height: 100%;
   }
 
+  .upper {
+    height: 20%;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .lower {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .left {
-    width: 40%;
+    background-color: lightgray;
+    padding: 50px 20px;
   }
 
   .right {
-    width: 60%;
-  }
-}
-@media screen and (max-width: 768px) {
-  .calculate-view-container {
-    width: 100%;
+    background-color: lightgray;
+    padding: 50px 20px;
   }
 
-  .left, .right {
-    width: 90%;
-    padding: 30px 20px;
+  @media screen and (min-width: 768px) {
+    .lower {
+      flex-direction: row;
+      height: 100%;
+    }
+
+    .left {
+      width: 40%;
+    }
+
+    .right {
+      width: 60%;
+    }
   }
-}
+  @media screen and (max-width: 768px) {
+    .calculate-view-container {
+      width: 100%;
+    }
+
+    .left,
+    .right {
+      width: 90%;
+      padding: 30px 20px;
+    }
+  }
 </style>
