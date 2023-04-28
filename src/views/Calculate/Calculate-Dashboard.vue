@@ -1,68 +1,71 @@
 <template>
-<div class="container">
+  <div class="container">
     <div class="tabs">
-        <router-link v-for="destination in destinations" :key="destination.slug" :to="{ name: 'calculate-view', params: { slug: destination.slug } }" :class="{ 'active-tab': currentSlug === destination.slug }">
-            {{ destination.name }}
-        </router-link>
+      <router-link
+        v-for="loan_type in loan_types"
+        :key="loan_type.slug"
+        :to="{ name: 'calculate-view', params: { slug: loan_type.slug } }"
+        :class="{ 'active-tab': currentSlug === loan_type.slug }"
+      >
+        {{ loan_type.name }}
+      </router-link>
     </div>
     <div class="router-container">
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
-//   import CalcTabLayout from "@/components/CalcTabLayout";
-import store from "@/store"; // import the store
-import {
-    mapState
-} from "vuex";
-export default {
+  //   import CalcTabLayout from "@/components/CalcTabLayout";
+  import store from "@/store"; // import the store
+  import { mapState } from "vuex";
+  export default {
     name: "CalculateView",
     computed: {
-        ...mapState({
-            destinations: (state) => state.destination.destinations,
-        }),
-        currentSlug() {
-            if (this.$route.params.slug) {
-                return this.$route.params.slug;
-            }
-            return "";
-        },
+      ...mapState({
+        loan_types: (state) => state.loan_type.loan_type,
+      }),
+      currentSlug() {
+        if (this.$route.params.slug) {
+          return this.$route.params.slug;
+        }
+        return "";
+      },
     },
     created() {
-        this.$store = store;
-        console.log(this.destinations);
+      this.$store = store;
+      console.log(this.loan_types);
     },
     methods: {
-        goToDestination(slug) {
-            this.$router.push({
-                name: "calculate-view",
-                params: {
-                    slug: slug,
-                },
-            });
-        },
+      goToloan_type(slug) {
+        this.$router.push({
+          name: "calculate-view",
+          params: {
+            slug: slug,
+          },
+        });
+      },
     },
-};
+  };
 </script>
 
 <style>
-.container {
+  .container {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-}
+  }
 
-.tabs {
+  .tabs {
     display: flex;
     flex-direction: row;
     height: 50px;
     background-color: #f5f5f5;
-}
+  }
 
-.tabs a {
+  .tabs a {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,28 +74,28 @@ export default {
     color: #000000;
     text-decoration: none;
     font-weight: bold;
-}
+  }
 
-.tabs a:hover {
+  .tabs a:hover {
     background-color: #ddd;
-}
+  }
 
-.active-tab {
+  .active-tab {
     background-color: #4caf50;
     color: #ffffff;
-}
+  }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .tabs {
-        flex-direction: column;
-        height: auto;
-        width: 100%;
+      flex-direction: column;
+      height: auto;
+      width: 100%;
     }
 
     .tabs a {
-        width: 100%;
-        height: 50px;
-        margin-bottom: 5px;
+      width: 100%;
+      height: 50px;
+      margin-bottom: 5px;
     }
-}
+  }
 </style>

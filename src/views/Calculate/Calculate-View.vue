@@ -24,12 +24,12 @@
     name: "CalculateView",
     computed: {
       ...mapState({
-        destinations: (state) => state.destination.destinations,
+        loan_type: (state) => state.loan_type.loan_type,
       }),
     },
     created() {
       this.$store = store;
-      console.log(this.destinations);
+      console.log(this.loan_type);
     },
     components: {
       LoanCalculatorVue,

@@ -1,5 +1,5 @@
 const state = {
-    destinations: [{
+    loan_type: [{
         name: "Diminishing Interest",
         slug: "diminishing-interest",
         component: "diminishingInterest",

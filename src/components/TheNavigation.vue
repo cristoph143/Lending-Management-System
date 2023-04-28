@@ -7,11 +7,11 @@
       </li>
       <li
         class="links"
-        v-for="(destination, index) in destinations"
+        v-for="(loan_type, index) in loan_types"
         :key="index"
       >
-        <router-link :to="`/${destination.slug}`">{{
-          destination.name
+        <router-link :to="`/${loan_type.slug}`">{{
+          loan_type.name
         }}</router-link>
       </li>
     </ul>
@@ -24,7 +24,7 @@
   export default {
     computed: {
       ...mapState({
-        destinations: (state) => state.destination.destinations,
+        loan_types: (state) => state.loan_type.loan_type,
       }),
     },
   };

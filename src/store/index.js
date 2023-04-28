@@ -1,10 +1,10 @@
 import {
     createStore
 } from 'vuex';
-import destination from "./modules/destinations";
+import loan_type from "./modules/loan_type";
 
 export default createStore({
     modules: {
-        destination,
+        loan_type,
     },
 });
