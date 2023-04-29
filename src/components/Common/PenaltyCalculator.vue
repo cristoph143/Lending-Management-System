@@ -156,6 +156,9 @@
           this.errors = errors;
           this.$nextTick(() => {
             this.showError = true;
+            setTimeout(() => {
+              this.hideError();
+            }, 2000);
           });
         } else {
           console.log(this.formData);
@@ -167,6 +170,9 @@
           this.errors.shift();
           this.$nextTick(() => {
             this.showError = true;
+            setTimeout(() => {
+              this.hideError();
+            }, 2000);
           });
         } else {
           this.showError = false;
