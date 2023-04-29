@@ -52,8 +52,6 @@
       :errorMessage="errorMessage"
       v-if="showError"
       @close="hideError"
-      :duration="5000"
-      @countdownFinished="setError(false)"
     />
 
     <ButtonElement

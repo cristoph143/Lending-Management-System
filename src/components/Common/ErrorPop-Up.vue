@@ -5,7 +5,6 @@
       <button class="close-button" @click="closeError">
         {{ closeButtonLabel }}
       </button>
-      <div class="timer">{{ remainingTime }}</div>
     </div>
   </teleport>
 </template>
@@ -23,64 +22,13 @@
         type: String,
         default: "red",
       },
-      duration: {
-        type: Number,
-        required: true,
-      },
     },
-    emits: ["close", "countdownFinished"],
-    data() {
-      return {
-        remainingTime: this.formatTime(this.duration),
-        timer: null,
-        localDuration: this.duration,
-      };
-    },
-    created() {
-      const data = {
-        message: "Countdown has finished",
-        count: 0,
-      };
-      this.countdownTimer = setInterval(() => {
-        if (this.localDuration > 0) {
-          this.localDuration--;
-        } else {
-          clearInterval(this.countdownTimer);
-          this.$emit("countdownFinished", data);
-          this.$emit("close");
-        }
-      }, 1000);
-    },
-    beforeUnmount() {
-      clearInterval(this.countdownTimer);
-    },
-    mounted() {
-      this.startTimer();
-    },
+    emits: ["close"],
     methods: {
-      startTimer() {
-        this.timer = setInterval(() => {
-          if (this.localDuration > 0) {
-            this.localDuration -= 1000;
-            this.remainingTime = this.formatTime(this.localDuration);
-          } else {
-            clearInterval(this.timer);
-            this.$emit("countdownFinished");
-            this.$emit("close");
-          }
-        }, 1000);
-      },
-
       closeError() {
-        clearInterval(this.timer);
         this.$emit("close");
       },
-      formatTime(duration) {
-        const minutes = Math.floor(duration / 60000);
-        const seconds = Math.floor((duration % 60000) / 1000);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-      },
-    },
+    }
   };
 </script>
 
