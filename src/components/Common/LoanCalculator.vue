@@ -9,33 +9,25 @@
   >
     <GroupElement name="container">
       <SliderElement
-        :name="loanAmountName"
-        :label="loanAmountLabel"
-        :rules="loanRules"
-        :field-name="loanAmountFieldName"
-        :default="loanAmountDefault"
-        :max="loanAmountMax"
-        :min="loanAmountMin"
-        :id="loanAmountId"
-      />
-      <SliderElement
-        :name="loanTermName"
-        :label="loanTermLabel"
-        :rules="loanRules"
-        :field-name="loanTermFieldName"
-        :default="loanTermDefault"
-        :max="loanTermMax"
-        :min="loanTermMin"
-        :id="loanTermId"
+        v-for="(sliderData, index) in slidersData"
+        :key="index"
+        :name="sliderData.name"
+        :label="sliderData.label"
+        :rules="rules"
+        :field-name="sliderData.label"
+        :default="min"
+        :max="sliderData.max"
+        :min="min"
+        :id="sliderData.name"
       />
       <SelectElement
-        :name="paymentFrequencyName"
-        :items="paymentFrequencyItems"
-        :label="paymentFrequencyLabel"
-        :field-name="paymentFrequencyFieldName"
-        :rules="paymentFrequencyRules"
-        :id="paymentFrequencyId"
-        :default="paymentFrequencyDefault"
+        :name="paymentFrequency.name"
+        :items="paymentFrequency.items"
+        :label="paymentFrequency.label"
+        :field-name="paymentFrequency.label"
+        :rules="rules"
+        :id="paymentFrequency.name"
+        :default="paymentFrequency.default"
       />
     </GroupElement>
     <StaticElement name="divider_1" :content="dividerContent" />
@@ -68,46 +60,43 @@
     name: "LoanCalculator",
     data() {
       return {
-        paymentFrequencyId: "payment_frequency",
-        paymentFrequencyFieldName: "Payment Frequency",
-        paymentFrequencyLabel: "Payment Frequency",
-        formClass: "vf-loan-calculator",
-        loanAmountName: "loanAmount",
-        loanAmountLabel: "Loan amount",
-        loanRules: ["required"],
-        loanAmountFieldName: "loan-amount",
-        loanAmountDefault: 1,
-        loanAmountMax: 10000,
-        loanAmountMin: 1,
-        loanAmountId: "loan-amount-slider",
-        loanTermName: "loanTerm",
-        loanTermLabel: "Loan term",
-        loanTermFieldName: "loan-term",
-        loanTermDefault: 1,
-        loanTermMax: 28,
-        loanTermMin: 1,
-        loanTermId: "loan-term-slider",
-        paymentFrequencyName: "paymentFrequency",
-        paymentFrequencyItems: [
+        rules: ["required"],
+        min: 1,
+        slidersData: [
           {
-            value: "365",
-            label: "Daily",
+            name: "loanAmount",
+            label: "Loan amount",
+            max: 10000
           },
           {
-            value: "52",
-            label: "Weekly",
-          },
-          {
-            value: "2",
-            label: "Twice a Month",
-          },
-          {
-            value: "1",
-            label: "Monthly",
+            name: "loanTerm",
+            label: "Loan term",
+            max: 28
           },
         ],
-        paymentFrequencyRules: ["required"],
-        paymentFrequencyDefault: "365",
+        paymentFrequency: {
+          name: "paymentFrequency",
+          label: "Payment Frequency",
+          default: "365",
+          items: [
+            {
+              value: "365",
+              label: "Daily",
+            },
+            {
+              value: "52",
+              label: "Weekly",
+            },
+            {
+              value: "2",
+              label: "Twice a Month",
+            },
+            {
+              value: "1",
+              label: "Monthly",
+            },
+          ],
+        },
         dividerContent: '<hr :style="dividerStyles" />',
         dividerStyles: {
           borderColor: "#d1d5db",
@@ -137,13 +126,6 @@
         // Get the form data
         const formData = this.$refs.vueform.data;
         console.log(formData);
-
-        // Do the calculation based on the form data
-        // const paymentAmount =
-        //   formData.loanAmount / (formData.loanTerm * formData.paymentFrequency);
-
-        // // Log the payment amount
-        // console.log(paymentAmount);
       },
       resetForm() {
         // Reset the form to its initial values
