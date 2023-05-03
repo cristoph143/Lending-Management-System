@@ -42,7 +42,7 @@
     },
     computed: {
       ...mapState({
-        loan_types: (state) => state.loan_type.loan_type,
+        loan_types: (state) => state.loan_type.loan_type.loan_type,
       }),
       currentSlug() {
         if (this.$route.params.slug) {

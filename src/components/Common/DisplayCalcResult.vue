@@ -10,7 +10,7 @@
     name: "CalculateView",
     computed: {
       ...mapState({
-        loan_type: (state) => state.loan_type.loan_type,
+        loan_type: (state) => state.loan_type.loan_type.loan_type,
       }),
       currentSlug() {
         if (this.$route.params.slug) {

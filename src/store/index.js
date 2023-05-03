@@ -1,10 +1,8 @@
-import {
-    createStore
-} from 'vuex';
-import loan_type from "./modules/loan_type";
+import loanTypeStore from './modules/LoanType/index.js';
+import { createStore } from 'vuex';
 
 export default createStore({
     modules: {
-        loan_type,
+        loan_type: loanTypeStore,
     },
 });

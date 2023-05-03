@@ -10,15 +10,15 @@
   >
     <GroupElement name="container">
       <TextElement
-        name="amountDue"
+        name="penalty.amountDue"
         input-type="number"
-        :rules="rules"
+        :rules="penalty.rules"
         label="Amount Due"
         id="amount_due"
         field-name="Amount Due"
-        :default="amountDue"
-        :v-model="formData.amountDue"
-        @change="onChange('amountDue', $event)"
+        :default="penalty.amountDue"
+        :v-model="penalty.formData.amountDue"
+        @change="onChange('penalty.amountDue', $event)"
       />
       <DateElement
         v-for="(date, index) in dates"
@@ -111,12 +111,20 @@
     },
     computed: {
       ...mapState({
-        loan_type: (state) => state.loan_type.loan_type,
+        loan_type: (state) => state.loan_type.loan_type.loan_type,
+        penalty: (state) => state.loan_type.penaltyCalculator,
       }),
     },
     created() {
       this.$store = store;
+      console.log(this.$store);
+      console.log("-----------------");
       console.log(this.loan_type);
+      console.log(this.penalty.amountDue);
+      if (this.penaltyCalculator && this.penaltyCalculator.dates) {
+        // Access the `dates` property here
+        console.log("sdsdfg")
+      }
     },
     methods: {
       setError() {
