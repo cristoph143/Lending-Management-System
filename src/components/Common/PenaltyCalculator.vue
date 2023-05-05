@@ -69,60 +69,119 @@
 
 <script>
   import store from "@/store"; // import the store
+  import { mapState } from "vuex";
   import ErrorPopUp from "./ErrorPop-Up.vue";
-  import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 
   export default {
     name: "PenaltyCalculator",
+    data() {
+      return {
+        errorMessage: "",
+        dates: ["dueDate", "actualDate"],
+        formData: {
+          amountDue: 0,
+          dueDate: this.getCurrentDate(),
+          actualDate: this.getCurrentDate(),
+        },
+        amountDue: "0",
+        add_class: "vf-penalty-calculator",
+        date_format: "MMMM D, YYYY",
+        dividerContent: '<hr :style="dividerStyles" />',
+        dividerStyles: {
+          borderColor: "#d1d5db",
+          marginTop: "8px",
+          paddingBottom: "8px",
+        },
+        rules: ["required", "numeric", "min:0"],
+        conditions: [
+          ["container.amountDue", ">", "1"],
+          [
+            ["container.actualDate", "not_empty"],
+            ["container.actualDate", "before", "today"],
+            ["container.actualDate", "after", "today"],
+          ],
+          [
+            ["container.dueDate", "not_empty"],
+            ["container.dueDate", "before", "today"],
+            ["container.dueDate", "after", "today"],
+          ],
+        ],
+        showError: false,
+      };
+    },
     computed: {
       ...mapState({
-        errorMessage: (state) => state.loan_type.penalty_calculator,
-        dates: (state) => state.loan_type.penalty_calculator.dates,
-        formData: (state) => state.loan_type.penalty_calculator.formData,
-        amountDue: (state) => state.loan_type.penalty_calculator.amountDue,
-        add_class: (state) => state.loan_type.penalty_calculator.add_class,
-        date_format: (state) => state.loan_type.penalty_calculator.date_format,
-        dividerContent: (state) => state.loan_type.penalty_calculator.dividerContent,
-        dividerStyles: (state) => state.loan_type.penalty_calculator.dividerStyles,
-        rules: (state) => state.loan_type.penalty_calculator.rules,
-        conditions: (state) => state.loan_type.penalty_calculator.conditions,
-        showError: (state) => state.loan_type.penalty_calculator.showError,
         loan_type: (state) => state.loan_type.loan_type.loan_type,
-      }),
-      ...mapGetters("penaltyCalculator", {
-        getCurrentDate: "getCurrentDate",
-        capitalize: "capitalize",
       }),
     },
     created() {
       this.$store = store;
-      console.log(this.errorMessage);
-      try {
-        console.log(this.errorMessage);
-        console.log(this.dates);
-        console.log(this.formData);
-        console.log(this.amountDue);
-        console.log(this.add_class);
-        console.log(this.date_format);
-        console.log(this.dividerContent);
-        console.log(this.dividerStyles);
-        console.log(this.rules);
-        console.log(this.conditions);
-        console.log(this.showError);
-      } catch (error) {
-        console.error(error);
-      }
+      console.log(this.loan_type);
     },
     methods: {
-      ...mapActions("penaltyCalculator", {
-        calculatePayment: "calculatePayment",
-        resetForm: "resetForm",
-      }),
-      ...mapMutations("penaltyCalculator", {
-        setError: "setError",
-        onChange: "onChange",
-        hideError: "hideError",
-      }),
+      setError() {
+        this.showError = true;
+      },
+      onChange(date, event) {
+        console.log(date, event);
+        this.formData[date] = event;
+      },
+      capitalize(str) {
+        let result = str.replace(/([A-Z])/g, " $1");
+        return result.charAt(0).toUpperCase() + result.slice(1);
+      },
+      getCurrentDate() {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        return formattedDate;
+      },
+      calculatePayment() {
+        const errors = [];
+
+        if (this.formData.amountDue < 1) {
+          errors.push("Amount due should be greater than 1.");
+        }
+
+        if (this.formData.actualDate == this.formData.dueDate) {
+          errors.push("Actual date should be the same as the due date.");
+        }
+
+        if (errors.length > 0) {
+          this.errorMessage = errors[0];
+          errors.shift();
+          this.errors = errors;
+          this.$nextTick(() => {
+            this.showError = true;
+            setTimeout(() => {
+              this.hideError();
+            }, 2000);
+          });
+        } else {
+          console.log(this.formData);
+        }
+      },
+      hideError() {
+        if (this.errors.length > 0) {
+          this.errorMessage = this.errors[0];
+          this.errors.shift();
+          this.$nextTick(() => {
+            this.showError = true;
+            setTimeout(() => {
+              this.hideError();
+            }, 2000);
+          });
+        } else {
+          this.showError = false;
+        }
+      },
+      resetForm() {
+        // Reset the form to its initial values
+        this.$refs.vueform.resetForm();
+      },
     },
     components: {
       ErrorPopUp,
