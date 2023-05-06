@@ -10,6 +10,7 @@
   import TheNavigation from "@/components/TheNavigation";
   import store from "@/store"; // import the store
   import HeaderComponent from "../src/components/Common/HeaderComponent.vue";
+  
   export default {
     name: "App",
     components: {

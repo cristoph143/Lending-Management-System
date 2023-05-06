@@ -48,11 +48,6 @@
       }"
       @click="calculatePayment"
     />
-    <ErrorPopUp
-      :errorMessage="errorMessage"
-      v-if="showError"
-      @close="hideError"
-    />
 
     <ButtonElement
       name="reset"
@@ -70,7 +65,8 @@
 <script>
   import store from "@/store"; // import the store
   import { mapState } from "vuex";
-  import ErrorPopUp from "./ErrorPop-Up.vue";
+  import { useToast } from "vue-toastification";
+
 
   export default {
     name: "PenaltyCalculator",
@@ -140,6 +136,8 @@
         return formattedDate;
       },
       calculatePayment() {
+        const $toast = useToast();
+
         const errors = [];
 
         if (this.formData.amountDue < 1) {
@@ -151,40 +149,34 @@
         }
 
         if (errors.length > 0) {
-          this.errorMessage = errors[0];
-          errors.shift();
-          this.errors = errors;
-          this.$nextTick(() => {
-            this.showError = true;
-            setTimeout(() => {
-              this.hideError();
-            }, 2000);
+          errors.forEach((error) => {
+            $toast.warning(error, {
+              position: "bottom-right",
+              timeout: 978,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: {
+                iconClass: "undefined",
+                iconChildren: "",
+                iconTag: "i",
+              },
+              rtl: false,
+            });
           });
         } else {
           console.log(this.formData);
-        }
-      },
-      hideError() {
-        if (this.errors.length > 0) {
-          this.errorMessage = this.errors[0];
-          this.errors.shift();
-          this.$nextTick(() => {
-            this.showError = true;
-            setTimeout(() => {
-              this.hideError();
-            }, 2000);
-          });
-        } else {
-          this.showError = false;
         }
       },
       resetForm() {
         // Reset the form to its initial values
         this.$refs.vueform.resetForm();
       },
-    },
-    components: {
-      ErrorPopUp,
     },
   };
 </script>
