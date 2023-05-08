@@ -1,13 +1,5 @@
 <template>
-  <Vueform
-    ref="vueform"
-    size="md"
-    :display-errors="true"
-    validate-on="step|change"
-    :display-messages="true"
-    :force-labels="true"
-    :float-placeholders="true"
-  >
+  <Vueform ref="vueform" size="md" validate-on="step|change">
     <GroupElement name="container">
       <TextElement
         name="amountDue"
@@ -24,19 +16,19 @@
         v-for="(date, index) in dates"
         :key="index"
         :name="date"
-        :label="capitalize(date)"
+        :label="capitalizedLabels[index]"
         :id="date"
         :rules="rules[0]"
-        :field-name="capitalize(date)"
+        :field-name="capitalizedLabels[index]"
         :display-format="date_format"
         :value-format="date_format"
         :load-format="date_format"
         :v-model="formData[date]"
-        :default="getCurrentDate()"
+        :default="getCurrentDate"
         @change="onChange(date, $event)"
+        :capitalized-label="capitalizedDateLabel"
       />
     </GroupElement>
-    {{ formData.dueDate }}f
     <StaticElement name="divider_1" :content="dividerContent" />
     <ButtonElement
       name="calculate_copy"
@@ -46,8 +38,9 @@
       :columns="{
         container: 4,
       }"
-      @click="calculatePayment"
+      @click="triggerCalculatePayment"
     />
+    <div >Payment Result: {{ paymentResult }}</div>
 
     <ButtonElement
       name="reset"
@@ -63,120 +56,102 @@
 </template>
 
 <script>
-  import store from "@/store"; // import the store
-  import { mapState } from "vuex";
-  import { useToast } from "vue-toastification";
-
+  import { mapState, mapGetters, mapActions } from "vuex";
 
   export default {
     name: "PenaltyCalculator",
+    props: {
+      // Define props here
+      default: {
+        type: [String, Date, Function],
+        default: null,
+      },
+      capitalizedLabel: {
+        type: Function,
+        required: true,
+      },
+    },
     data() {
       return {
-        errorMessage: "",
-        dates: ["dueDate", "actualDate"],
-        formData: {
-          amountDue: 0,
-          dueDate: this.getCurrentDate(),
-          actualDate: this.getCurrentDate(),
-        },
-        amountDue: "0",
-        add_class: "vf-penalty-calculator",
-        date_format: "MMMM D, YYYY",
-        dividerContent: '<hr :style="dividerStyles" />',
-        dividerStyles: {
-          borderColor: "#d1d5db",
-          marginTop: "8px",
-          paddingBottom: "8px",
-        },
-        rules: ["required", "numeric", "min:0"],
-        conditions: [
-          ["container.amountDue", ">", "1"],
-          [
-            ["container.actualDate", "not_empty"],
-            ["container.actualDate", "before", "today"],
-            ["container.actualDate", "after", "today"],
-          ],
-          [
-            ["container.dueDate", "not_empty"],
-            ["container.dueDate", "before", "today"],
-            ["container.dueDate", "after", "today"],
-          ],
-        ],
-        showError: false,
+        capitalizedLabels: [],
       };
     },
+    watch: {
+      dates: {
+        handler: function (newDates) {
+          Promise.all(
+            newDates.map((date) => {
+              return this.capitalizedDateLabel(date);
+            })
+          ).then((capitalizedLabels) => {
+            this.capitalizedLabels = capitalizedLabels;
+          });
+        },
+        immediate: true,
+      },
+    },
     computed: {
+      ...mapGetters("penalty_calculator", ["getCurrentDate"]),
       ...mapState({
         loan_type: (state) => state.loan_type.loan_type.loan_type,
+        currentDate: (state) => state.loan_type.getCurrentDate,
       }),
-    },
-    created() {
-      this.$store = store;
-      console.log(this.loan_type);
+      currentDate() {
+        return this.getCurrentDate;
+      },
+      paymentResult() {
+        return this.$store.getters["penalty_calculator/paymentResult"];
+      },
+      ...mapState("penalty_calculator", [
+        "errorMessage",
+        "dates",
+        "formData",
+        "amountDue",
+        "add_class",
+        "date_format",
+        "dividerContent",
+        "dividerStyles",
+        "rules",
+        "conditions",
+        "showError",
+      ]),
     },
     methods: {
-      setError() {
-        this.showError = true;
+      ...mapActions("penalty_calculator", [
+        "setError",
+        "onChange",
+        "capitalizeString",
+        "calculatePayment",
+        "resetForm",
+        "fetchCurrentDate",
+      ]),
+      onChange(date, value) {
+        this.formData[date] = value;
       },
-      onChange(date, event) {
-        console.log(date, event);
-        this.formData[date] = event;
-      },
-      capitalize(str) {
-        let result = str.replace(/([A-Z])/g, " $1");
-        return result.charAt(0).toUpperCase() + result.slice(1);
-      },
-      getCurrentDate() {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-        return formattedDate;
-      },
-      calculatePayment() {
-        const $toast = useToast();
-
-        const errors = [];
-
-        if (this.formData.amountDue < 1) {
-          errors.push("Amount due should be greater than 1.");
-        }
-
-        if (this.formData.actualDate == this.formData.dueDate) {
-          errors.push("Actual date should be the same as the due date.");
-        }
-
-        if (errors.length > 0) {
-          errors.forEach((error) => {
-            $toast.warning(error, {
-              position: "bottom-right",
-              timeout: 978,
-              closeOnClick: true,
-              pauseOnFocusLoss: true,
-              pauseOnHover: true,
-              draggable: true,
-              draggablePercent: 0.6,
-              showCloseButtonOnHover: true,
-              hideProgressBar: true,
-              closeButton: "button",
-              icon: {
-                iconClass: "undefined",
-                iconChildren: "",
-                iconTag: "i",
-              },
-              rtl: false,
-            });
+      triggerCalculatePayment() {
+        this.$store
+          .dispatch("penalty_calculator/calculatePayment")
+          .catch((error) => {
+            console.error(error); // Log the error
           });
-        } else {
-          console.log(this.formData);
-        }
       },
-      resetForm() {
-        // Reset the form to its initial values
-        this.$refs.vueform.resetForm();
+      capitalizedDateLabel(str) {
+        return new Promise((resolve, reject) => {
+          this.$store
+            .dispatch("penalty_calculator/capitalizeString", str.toString())
+            .then((result) => {
+              console.log(result); // Log the result
+              resolve(result);
+            })
+            .catch((error) => {
+              console.error(error); // Log the error
+              reject(error);
+            });
+        });
       },
     },
+    create(){
+      console.log(this.$store.paymentResult)
+    }
   };
 </script>
