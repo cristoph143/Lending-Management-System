@@ -54,6 +54,7 @@ const state = {
             ["container.paymentFrequency", "not_in", ["365"]],
         ],
     ],
+    loanType: "",
 };
 const mutations = {
     SET_LOAN_TYPE(state, loanType) {
@@ -67,7 +68,7 @@ const actions = {
     setLoanType({ commit }, loanType) {
         commit('SET_LOAN_TYPE', loanType);
     },
-    calculatePayment({ commit }, formData) {
+    calculatePayment({ commit }, { formData }) {
         console.log(formData);
         commit('SET_FORM_DATA', formData);
     },
@@ -75,6 +76,7 @@ const actions = {
         commit('SET_FORM_DATA', {});
     },
 }
+
 export default {
     namespaced: true,
     state,

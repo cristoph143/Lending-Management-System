@@ -54,26 +54,25 @@
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from "vuex";
+  import { mapState, mapActions } from "vuex";
 
   export default {
     name: "LoanCalculator",
     props: {
       // Define props here
       default: {
-        type: [String, Date, Function],
+        type: [String, Function],
         default: null,
       },
+      loanType: {
+        type: String,
+        required: true,
+      },
     },
-
     computed: {
-      ...mapGetters(["penalty_calculator"]),
       ...mapState({
         loan_type: (state) => state.destinationsStore.loan_type.loan_type,
       }),
-      currentDate() {
-        return this.getCurrentDate;
-      },
       ...mapState("loanCalculator", [
         "slidersData",
         "paymentFrequency",
@@ -84,12 +83,16 @@
       ]),
     },
     methods: {
-      ...mapActions("loanCalculator", ["calculatePayment", "capitalizeString"]),
+      ...mapActions("loanCalculator", ["calculatePayment"]),
       triggerCalculatePayment() {
-      const formData = this.$refs.vueform.data;
-      console.log(formData)
+        const formData = this.$refs.vueform.data;
+        const loan_type = this.$route.params.slug;
+        formData['loan_type'] = loan_type;
+        console.log(formData);
         this.$store
-          .dispatch("loanCalculator/calculatePayment", formData)
+          .dispatch("loanCalculator/calculatePayment", {
+            formData,
+          })
           .catch((error) => {
             console.error(error); // Log the error
           });

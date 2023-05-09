@@ -1,6 +1,5 @@
 // store/modules/penaltyCalculator.js
 import store from '@/store';
-
 const state = {
     errorMessage: "",
     dates: ["dueDate", "actualDate"],
@@ -100,6 +99,8 @@ const actions = {
         } else {
             // Calculate the payment and return the result
             const payment = state.formData.amountDue * 1.1;
+            // Calculate the penalty and update the state
+            store.dispatch('formula/calculatePenalty', state.formData);
             commit("SET_PAYMENT_RESULT", payment);
             return payment;
         }
