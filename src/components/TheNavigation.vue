@@ -24,7 +24,7 @@
   export default {
     computed: {
       ...mapState({
-        loan_types: (state) => state.loan_type.loan_type,
+        loan_types: (state) => state.destinationsStore.loan_type,
       }),
     },
   };

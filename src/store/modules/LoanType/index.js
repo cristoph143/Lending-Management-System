@@ -1,9 +1,7 @@
-import loanTypeModule from './loanTypeModule';
-import penaltyCalculatorModule from './PenaltyCalculator/penaltyCalculatorModule';
+import penalty_calculator from './penalty_calculator.js';
 const loanTypeStore = {
     modules: {
-        loan_type: loanTypeModule,
-        penalty_Calculator: penaltyCalculatorModule
+        penalty_calculator: penalty_calculator,
     },
 };
 

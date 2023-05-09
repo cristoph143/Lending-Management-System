@@ -1,5 +1,5 @@
 // store/modules/penaltyCalculator.js
-import { useToast } from "vue-toastification";
+import store from '@/store';
 
 const state = {
     errorMessage: "",
@@ -37,7 +37,7 @@ const state = {
 };
 
 const getters = {
-    loan_type: (state) => state.loan_type.loan_type.loan_type,
+    loan_type: (state) => state.destinationsStore.loan_type.loan_type,
     getCurrentDate: () => getCurrentDate(),
     capitalizedString: (state) => (date) => {
         return state.capitalizedStrings[date] || '';
@@ -75,8 +75,6 @@ const actions = {
     },
     calculatePayment({ state, commit }) {
         console.log(":::::::::::::::::::::::::::::::::::::::")
-        const $toast = useToast();
-
         const errors = [];
         console.log(state.formData)
         if (state.formData.amountDue < 1) {
@@ -96,27 +94,10 @@ const actions = {
         }
         console.log(state.formData)
 
-
         if (errors.length > 0) {
-            errors.forEach((error) => {
-                $toast.warning(error, {
-                    position: "bottom-right",
-                    timeout: 978,
-                    closeOnClick: true,
-                    pauseOnFocusLoss: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    draggablePercent: 0.6,
-                    showCloseButtonOnHover: true,
-                    hideProgressBar: true,
-                    closeButton: "button",
-                    icon: {
-                        iconClass: "undefined",
-                        iconChildren: "",
-                        iconTag: "i",
-                    },
-                    rtl: false,
-                });
+            store.dispatch('toast/toast', {
+                messages: errors,
+                type: 'warning',
             });
         } else {
             // Calculate the payment and return the result

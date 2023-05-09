@@ -28,7 +28,7 @@
     name: "CalculateView",
     computed: {
       ...mapState({
-        loan_type: (state) => state.loan_type.loan_type.loan_type,
+        loan_type: (state) => state.destinationsStore.loan_type.loan_type,
       }),
     },
     created() {

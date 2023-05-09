@@ -93,7 +93,7 @@
     computed: {
       ...mapGetters("penalty_calculator", ["getCurrentDate"]),
       ...mapState({
-        loan_type: (state) => state.loan_type.loan_type.loan_type,
+        loan_type: (state) => state.destinationsStore.loan_type.loan_type,
         currentDate: (state) => state.loan_type.getCurrentDate,
       }),
       currentDate() {

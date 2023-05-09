@@ -1,10 +1,12 @@
+import destinationsStore from './modules/Destinations/index.js';
 import loanTypeStore from './modules/LoanType/index.js';
+import common from './modules/common/index.js';
 import { createStore } from 'vuex';
-import penalty_calculator from './modules/LoanType/penalty_calculator.js';
 
 export default createStore({
     modules: {
+        destinationsStore: destinationsStore,
         loan_type: loanTypeStore,
-        penalty_calculator: penalty_calculator,
+        common: common,
     },
 });
