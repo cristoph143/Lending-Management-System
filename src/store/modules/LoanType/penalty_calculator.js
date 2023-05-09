@@ -97,12 +97,17 @@ const actions = {
                 type: 'warning',
             });
         } else {
-            // Calculate the payment and return the result
-            const payment = state.formData.amountDue * 1.1;
-            // Calculate the penalty and update the state
-            store.dispatch('formula/calculatePenalty', state.formData);
-            commit("SET_PAYMENT_RESULT", payment);
-            return payment;
+            store.dispatch('formula/calculatePenalty', state.formData)
+                .then((penaltyResult) => {
+                    // Handle the penalty result here
+                    console.log("Penalty Result:", penaltyResult);
+                    commit("SET_PAYMENT_RESULT", penaltyResult);
+                    return penaltyResult;
+                })
+                .catch((error) => {
+                    // Handle the error here
+                    console.error("Error calculating penalty:", error);
+                });
         }
     },
     resetForm({ commit }) {

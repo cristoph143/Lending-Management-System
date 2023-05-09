@@ -1,5 +1,6 @@
 <template>
   {{ this.$route.params.slug }}
+  {{ penaltyResult }}
 </template>
 
 <script>
@@ -11,6 +12,7 @@
     computed: {
       ...mapState({
         loan_type: (state) => state.destinationsStore.loan_type.loan_type,
+        penaltyResult: (state) => state.loan_type.formula.penaltyResult,
       }),
       currentSlug() {
         if (this.$route.params.slug) {
@@ -18,6 +20,9 @@
         }
         return "";
       },
+    },
+    mounted() {
+      console.log(this.penaltyResult); // This will log the penaltyResult object
     },
     created() {
       this.$store = store;

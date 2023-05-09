@@ -40,7 +40,6 @@
       }"
       @click="triggerCalculatePayment"
     />
-    <div >Payment Result: {{ paymentResult }}</div>
 
     <ButtonElement
       name="reset"
