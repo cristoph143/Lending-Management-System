@@ -11,7 +11,8 @@
         <LoanCalculatorVue v-else />
       </div>
       <div class="right">
-        <DisplayCalcResult />
+        <DisplayCalcResult v-if="$route.params.slug === 'penalty-calculator'"/>
+        <DisplayTableVue v-else />
       </div>
     </div>
   </div>
@@ -23,6 +24,7 @@
   import LoanCalculatorVue from "@/components/Calculator/LoanCalculator.vue";
   import DisplayCalcResult from "@/components/Calculator/DisplayCalcResult.vue";
   import PenaltyCalculatorVue from "@/components/Calculator/PenaltyCalculator.vue";
+  import DisplayTableVue from "@/components/Calculator/DisplayTable.vue";
 
   export default {
     name: "CalculateView",
@@ -39,6 +41,7 @@
       LoanCalculatorVue,
       DisplayCalcResult,
       PenaltyCalculatorVue,
+      DisplayTableVue,
     },
   };
 </script>

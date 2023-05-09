@@ -72,7 +72,7 @@
   </div>
 </template>
 <script>
-import NavLinks from './NavLinks.vue';
+import NavLinks from '../Layouts/NavLinks.vue';
 
 export default {
   name: 'HeaderComponent',
