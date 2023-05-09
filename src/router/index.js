@@ -2,7 +2,7 @@ import {
     createRouter,
     createWebHistory
 } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/Common/HomeView.vue";
 
 const routes = [{
     path: "/",
@@ -12,25 +12,25 @@ const routes = [{
     path: "/about",
     name: "about",
     component: () =>
-        import( /* webpackChunkName: "about" */ "../views/AboutView.vue"),
+        import ( /* webpackChunkName: "about" */ "../views/Common/AboutView.vue"),
 }, {
     path: "/calculate",
     name: "calculate-dashboard",
     component: () =>
-        import( /* webpackChunkName: "calculate-dashboard" */ "../views/Calculate/Calculate-Dashboard.vue"),
+        import ( /* webpackChunkName: "calculate-dashboard" */ "../views/Common/Calculate/Calculate-Dashboard.vue"),
     children: [{
         path: ":slug",
         name: "calculate-view",
         component: () =>
-            import( /* webpackChunkName: "calculate-view" */ "../views/Calculate/Calculate-View.vue"),
+            import ( /* webpackChunkName: "calculate-view" */ "../views/Common/Calculate/Calculate-View.vue"),
         props: true,
-    },],
+    }, ],
 }, {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () =>
-        import( /* webpackChunkName: "not-found" */ '../views/NotFoundView.vue'),
-},];
+        import ( /* webpackChunkName: "not-found" */ '../views/Common/NotFoundView.vue'),
+}, ];
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),

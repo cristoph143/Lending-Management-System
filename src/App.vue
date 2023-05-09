@@ -7,9 +7,9 @@
 
 <script>
   /* eslint-disable */
-  import TheNavigation from "@/components/TheNavigation";
+  import TheNavigation from "@/components/Layouts/TheNavigation";
   import store from "@/store"; // import the store
-  import HeaderComponent from "../src/components/Common/HeaderComponent.vue";
+  import HeaderComponent from "./components/Layouts/HeaderComponent.vue";
   
   export default {
     name: "App",

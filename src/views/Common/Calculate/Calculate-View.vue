@@ -20,9 +20,9 @@
 <script>
   import store from "@/store";
   import { mapState } from "vuex";
-  import LoanCalculatorVue from "@/components/Common/LoanCalculator.vue";
-  import DisplayCalcResult from "@/components/Common/DisplayCalcResult.vue";
-  import PenaltyCalculatorVue from "@/components/Common/PenaltyCalculator.vue";
+  import LoanCalculatorVue from "@/components/Calculator/LoanCalculator.vue";
+  import DisplayCalcResult from "@/components/Calculator/DisplayCalcResult.vue";
+  import PenaltyCalculatorVue from "@/components/Calculator/PenaltyCalculator.vue";
 
   export default {
     name: "CalculateView",

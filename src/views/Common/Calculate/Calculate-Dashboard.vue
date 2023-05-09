@@ -18,7 +18,7 @@
     <div class="default-container" :class="{ centered: !$route.params.slug }">
       <div v-if="!$route.params.slug" class="no-route">
         <div class="image-section">
-          <img src="../../assets/images/Tax-Accountant.png" alt="Calculator" />
+          <img src="../../../assets/images/Tax-Accountant.png" alt="Calculator" />
           <h2>Calculate Loan</h2>
           <button class="accent-btn" @click="openTabs">
             Calculate and Apply Now
