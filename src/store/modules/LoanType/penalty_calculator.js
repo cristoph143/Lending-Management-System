@@ -37,14 +37,12 @@ const state = {
 };
 
 const getters = {
-    loan_type: (state) => state.destinationsStore.loan_type.loan_type,
     getCurrentDate: () => getCurrentDate(),
     capitalizedString: (state) => (date) => {
         return state.capitalizedStrings[date] || '';
     },
     paymentResult: (state) => state.paymentResult,
 };
-
 
 
 const actions = {

@@ -1,74 +1,83 @@
-// data() {
-//     return {
-//       rules: ["required"],
-//       min: 1,
-//       slidersData: [
-//         {
-//           name: "loanAmount",
-//           label: "Loan amount",
-//           max: 10000
-//         },
-//         {
-//           name: "loanTerm",
-//           label: "Loan term",
-//           max: 28
-//         },
-//       ],
-//       paymentFrequency: {
-//         name: "paymentFrequency",
-//         label: "Payment Frequency",
-//         default: "365",
-//         items: [
-//           {
-//             value: "365",
-//             label: "Daily",
-//           },
-//           {
-//             value: "52",
-//             label: "Weekly",
-//           },
-//           {
-//             value: "2",
-//             label: "Twice a Month",
-//           },
-//           {
-//             value: "1",
-//             label: "Monthly",
-//           },
-//         ],
-//       },
-//       dividerContent: '<hr :style="dividerStyles" />',
-//       dividerStyles: {
-//         borderColor: "#d1d5db",
-//         marginTop: "8px",
-//         paddingBottom: "8px",
-//       },
-//       resetConditions: [
-//         [
-//           ["container.loanAmount", ">", "1"],
-//           ["container.loanTerm", ">", "1"],
-//           ["container.paymentFrequency", "not_in", ["365"]],
-//         ],
-//       ],
-//     };
-//   },
-//   computed: {
-//     ...mapState({
-//       loan_type: (state) => state.loan_type.loan_type.loan_type.loan_type,
-//     }),
-//   },
-//   created() {
-//     this.$store = store;
-//     console.log(this.loan_type);
-//   },
-//   methods: {
-//     calculatePayment() {
-//       // Get the form data
-//       const formData = this.$refs.vueform.data;
-//       console.log(formData);
-//     },
-//     resetForm() {
-//       // Reset the form to its initial values
-//       this.$refs.vueform.resetForm();
-//     },
-//   },
+const state = {
+    // Validation rules for form fields
+    rules: ["required"],
+    // Minimum value for form fields
+    min: 1,
+    // Data for sliders in the form
+    slidersData: [{
+            name: "loanAmount",
+            label: "Loan amount",
+            max: 10000
+        },
+        {
+            name: "loanTerm",
+            label: "Loan term",
+            max: 28
+        },
+    ],
+    // Data for payment frequency dropdown in the form
+    paymentFrequency: {
+        name: "paymentFrequency",
+        label: "Payment Frequency",
+        default: "365",
+        items: [{
+                value: "365",
+                label: "Daily",
+            },
+            {
+                value: "52",
+                label: "Weekly",
+            },
+            {
+                value: "2",
+                label: "Twice a Month",
+            },
+            {
+                value: "1",
+                label: "Monthly",
+            },
+        ],
+    },
+    // HTML content for divider in the form
+    dividerContent: '<hr :style="dividerStyles" />',
+    // Styles for divider in the form
+    dividerStyles: {
+        borderColor: "#d1d5db",
+        marginTop: "8px",
+        paddingBottom: "8px",
+    },
+    // Conditions for resetting the form
+    resetConditions: [
+        [
+            ["container.loanAmount", ">", "1"],
+            ["container.loanTerm", ">", "1"],
+            ["container.paymentFrequency", "not_in", ["365"]],
+        ],
+    ],
+};
+const mutations = {
+    SET_LOAN_TYPE(state, loanType) {
+        state.loan_type = loanType;
+    },
+    SET_FORM_DATA(state, formData) {
+        state.formData = formData;
+    },
+}
+const actions = {
+    setLoanType({ commit }, loanType) {
+        commit('SET_LOAN_TYPE', loanType);
+    },
+    calculatePayment({ commit }, formData) {
+        console.log(formData);
+        commit('SET_FORM_DATA', formData);
+    },
+    resetForm({ commit }) {
+        commit('SET_FORM_DATA', {});
+    },
+}
+export default {
+    namespaced: true,
+    state,
+    actions,
+    mutations
+}

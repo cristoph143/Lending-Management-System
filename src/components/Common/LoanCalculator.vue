@@ -38,7 +38,7 @@
       :columns="{
         container: 4,
       }"
-      @click="calculatePayment"
+      @click="triggerCalculatePayment"
     />
     <ButtonElement
       name="reset"
@@ -54,82 +54,45 @@
 </template>
 
 <script>
-  import store from "@/store"; // import the store
-  import { mapState } from "vuex";
+  import { mapState, mapGetters, mapActions } from "vuex";
+
   export default {
     name: "LoanCalculator",
-    data() {
-      return {
-        rules: ["required"],
-        min: 1,
-        slidersData: [
-          {
-            name: "loanAmount",
-            label: "Loan amount",
-            max: 10000
-          },
-          {
-            name: "loanTerm",
-            label: "Loan term",
-            max: 28
-          },
-        ],
-        paymentFrequency: {
-          name: "paymentFrequency",
-          label: "Payment Frequency",
-          default: "365",
-          items: [
-            {
-              value: "365",
-              label: "Daily",
-            },
-            {
-              value: "52",
-              label: "Weekly",
-            },
-            {
-              value: "2",
-              label: "Twice a Month",
-            },
-            {
-              value: "1",
-              label: "Monthly",
-            },
-          ],
-        },
-        dividerContent: '<hr :style="dividerStyles" />',
-        dividerStyles: {
-          borderColor: "#d1d5db",
-          marginTop: "8px",
-          paddingBottom: "8px",
-        },
-        resetConditions: [
-          [
-            ["container.loanAmount", ">", "1"],
-            ["container.loanTerm", ">", "1"],
-            ["container.paymentFrequency", "not_in", ["365"]],
-          ],
-        ],
-      };
+    props: {
+      // Define props here
+      default: {
+        type: [String, Date, Function],
+        default: null,
+      },
     },
+
     computed: {
+      ...mapGetters(["penalty_calculator"]),
       ...mapState({
-        loan_type: (state) => state.destinationsStore.loan_type.loan_type.loan_type,
+        loan_type: (state) => state.destinationsStore.loan_type.loan_type,
       }),
-    },
-    created() {
-      this.$store = store;
-      console.log(this.loan_type);
+      currentDate() {
+        return this.getCurrentDate;
+      },
+      ...mapState("loanCalculator", [
+        "slidersData",
+        "paymentFrequency",
+        "dividerContent",
+        "rules",
+        "min",
+        "resetConditions",
+      ]),
     },
     methods: {
-      calculatePayment() {
-        // Get the form data
-        const formData = this.$refs.vueform.data;
-        console.log(formData);
-      },
-      resetForm() {
-        // Reset the form to its initial values
-        this.$refs.vueform.resetForm();
+      ...mapActions("loanCalculator", ["calculatePayment", "capitalizeString"]),
+      triggerCalculatePayment() {
+      const formData = this.$refs.vueform.data;
+      console.log(formData)
+        this.$store
+          .dispatch("loanCalculator/calculatePayment", formData)
+          .catch((error) => {
+            console.error(error); // Log the error
+          });
       },
     },
   };
