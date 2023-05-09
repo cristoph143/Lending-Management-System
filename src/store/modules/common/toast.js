@@ -1,5 +1,25 @@
 import { useToast } from "vue-toastification";
+const mutations = {
+    default_toast(state, messages) {
+        state.messages = messages;
+    },
+    success_toast(state, messages) {
+        state.messages = messages;
+    },
+    info_toast(state, messages) {
+        state.messages = messages;
+    },
+    warning_toast(state, messages) {
+        state.messages = messages;
+    },
+    error_toast(state, messages) {
+        state.messages = messages;
+    },
+};
 
+const state = {
+    messages: [],
+};
 const actions = {
     toast({ commit }, { messages, type }) {
         commit(`${type}_toast`, messages);
@@ -54,7 +74,11 @@ const actions = {
     },
 };
 
+
+
 export default {
     namespaced: true,
+    state,
     actions,
+    mutations,
 };
