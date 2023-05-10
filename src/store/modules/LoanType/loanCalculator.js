@@ -1,3 +1,5 @@
+import store from '@/store';
+
 const state = {
     // Validation rules for form fields
     rules: ["required"],
@@ -70,6 +72,17 @@ const actions = {
     },
     calculatePayment({ commit }, { formData }) {
         console.log(formData);
+        store.dispatch('formula/calculateLoan', formData)
+            .then((penaltyResult) => {
+                // Handle the penalty result here
+                // console.log("Penalty Result:", penaltyResult);
+                // commit("SET_PAYMENT_RESULT", penaltyResult);
+                return penaltyResult;
+            })
+            .catch((error) => {
+                // Handle the error here
+                console.error("Error calculating penalty:", error);
+            });
         commit('SET_FORM_DATA', formData);
     },
     resetForm({ commit }) {
