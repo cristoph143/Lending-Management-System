@@ -8,17 +8,17 @@
     add-class="formClass"
   >
     <GroupElement name="container">
-      <SliderElement
-        v-for="(sliderData, index) in slidersData"
+      <TextElement
+        v-for="(inputData, index) in inputsData"
+        input-type="number"
         :key="index"
-        :name="sliderData.name"
-        :label="sliderData.label"
+        :name="inputData.name"
+        :label="inputData.label"
         :rules="rules"
-        :field-name="sliderData.label"
+        :field-name="inputData.label"
         :default="min"
-        :max="sliderData.max"
         :min="min"
-        :id="sliderData.name"
+        :id="inputData.name"
       />
       <SelectElement
         :name="paymentFrequency.name"
@@ -74,7 +74,7 @@
         loan_type: (state) => state.destinationsStore.loan_type.loan_type,
       }),
       ...mapState("loanCalculator", [
-        "slidersData",
+        "inputsData",
         "paymentFrequency",
         "dividerContent",
         "rules",

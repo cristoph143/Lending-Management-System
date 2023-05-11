@@ -12,7 +12,7 @@
     computed: {
       ...mapState({
         loan_type: (state) => state.destinationsStore.loan_type.loan_type,
-        penaltyResult: (state) => state.loan_type.formula.penaltyResult,
+        penaltyResult: (state) => state.loan_type.formula.penalty_calculator.penaltyResult,
       }),
       currentSlug() {
         if (this.$route.params.slug) {

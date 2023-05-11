@@ -5,16 +5,14 @@ const state = {
     rules: ["required"],
     // Minimum value for form fields
     min: 1,
-    // Data for sliders in the form
-    slidersData: [{
+    // Data for input in the form
+    inputsData: [{
             name: "loanAmount",
             label: "Loan amount",
-            max: 10000
         },
         {
             name: "loanTerm",
             label: "Loan term",
-            max: 28
         },
     ],
     // Data for payment frequency dropdown in the form
@@ -74,9 +72,6 @@ const actions = {
         console.log(formData);
         store.dispatch('formula/calculateLoan', formData)
             .then((penaltyResult) => {
-                // Handle the penalty result here
-                // console.log("Penalty Result:", penaltyResult);
-                // commit("SET_PAYMENT_RESULT", penaltyResult);
                 return penaltyResult;
             })
             .catch((error) => {

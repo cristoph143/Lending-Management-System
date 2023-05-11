@@ -20,6 +20,80 @@ export const functions = {
         console.log("Number of days late:", numberOfDaysLate)
         return numberOfDaysLate;
     },
+    calculateFixedInterest(formData) {
+        const { loanAmount, loanTerm, paymentFrequency } = formData;
+        console.log(loanAmount);
+        console.log(loanTerm);
+        console.log(paymentFrequency);
+        const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
+        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
+        // const totalInterest = calculateTotalInterest(monthlyPayment, numberOfPayments, loanAmount);
+        // const processingFee = calculateProcessingFee(loanAmount);
+        // const extra_payments = calculateExtraPayments(loanAmount, processingFee, totalInterest);
+        const fixed_interest = {
+            // borrower_name
+            loanAmount,
+            //     interestRate,
+            //     processingFee,
+            // start_date,
+            //     loanTerm,
+            //     paymentFrequency,
+            numberOfPayments,
+            monthlyPayment,
+            //     totalInterest,
+            //     extra_payments
+            // total_cash_out
+            // total_amount_collected
+            // total_interest_earned
+            // total_payments_collected
+            // toatal_roi
+        };
+        console.log(fixed_interest);
+        return fixed_interest;
+    },
+    calculateLumpSum(formData) {
+        const { loanAmount, loanTerm, paymentFrequency } = formData;
+        console.log(loanAmount);
+        console.log(loanTerm);
+        console.log(paymentFrequency);
+        const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
+        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
+        const lump_sum = {
+            loanAmount,
+            numberOfPayments,
+            monthlyPayment,
+            loanTerm,
+            //         interestRate,
+            //         totalInterest,
+            //         processingFee,
+            //         paymentFrequency,
+        };
+        return lump_sum;
+    },
+    calculateDiminishingInterest(formData) {
+        const { loanAmount, loanTerm, paymentFrequency } = formData;
+        console.log(loanAmount);
+        console.log(loanTerm);
+        console.log(paymentFrequency);
+        const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
+        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
+
+        //     const totalInterest = calculateTotalInterest(monthlyPayment, numberOfPayments, loanAmount);
+        //     const processingFee = calculateProcessingFee(loanAmount);
+        //     const extra_payments = calculateExtraPayments(loanAmount, processingFee, totalInterest);
+        const diminishing_interest = {
+            loanAmount,
+            numberOfPayments,
+            monthlyPayment,
+            //         loanTerm,
+            //         interestRate,
+            //         totalInterest,
+            //         processingFee,
+            //         paymentFrequency,
+            //         extra_payments
+        };
+        return diminishing_interest;
+    },
     calculateNumberOfPayments(loanTerm, paymentFrequency) {
         let numberOfPayments = 0;
         if (paymentFrequency == 365 || paymentFrequency == 52) {
@@ -61,7 +135,7 @@ export const functions = {
                 // handle invalid paymentFrequency value
                 break;
         }
-        return monthlyPayment;
+        return { interestRate, monthlyPayment, totalInterestRate };
     },
     total_Interest_Rate(paymentFrequency, interestRate) {
         let totalInterestRate = 0;
