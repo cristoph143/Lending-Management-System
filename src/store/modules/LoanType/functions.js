@@ -21,78 +21,52 @@ export const functions = {
         return numberOfDaysLate;
     },
     calculateFixedInterest(formData) {
-        const { loanAmount, loanTerm, paymentFrequency } = formData;
-        console.log(loanAmount);
-        console.log(loanTerm);
-        console.log(paymentFrequency);
+        const { loanAmount, loanTerm, paymentFrequency, starting_date } = formData;
         const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
-        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
-        // const totalInterest = calculateTotalInterest(monthlyPayment, numberOfPayments, loanAmount);
-        // const processingFee = calculateProcessingFee(loanAmount);
-        // const extra_payments = calculateExtraPayments(loanAmount, processingFee, totalInterest);
-        const fixed_interest = {
-            // borrower_name
+        const monthly_Payment = this.monthlyPayment(formData, numberOfPayments);
+        let fixed_interest = {
             loanAmount,
-            //     interestRate,
-            //     processingFee,
-            // start_date,
-            //     loanTerm,
-            //     paymentFrequency,
+            monthly_Payment,
             numberOfPayments,
-            monthlyPayment,
-            //     totalInterest,
-            //     extra_payments
-            // total_cash_out
-            // total_amount_collected
-            // total_interest_earned
-            // total_payments_collected
-            // toatal_roi
+            loanTerm,
+            starting_date,
         };
-        console.log(fixed_interest);
-        return fixed_interest;
+        const calculate_fixed_Monthly_Payment = this.fixed_calculate_Monthly_Payment(fixed_interest);
+        // const diminishingInterest =this.diminishing_calculate_fixed_Monthly_Payment(formData, fixed_interest);
+        console.log(calculate_fixed_Monthly_Payment);
+        return { fixed_interest, calculate_fixed_Monthly_Payment };
+        // return {fixed_interest, diminishingInterest};
     },
     calculateLumpSum(formData) {
-        const { loanAmount, loanTerm, paymentFrequency } = formData;
+        const { loanAmount, loanTerm, paymentFrequency, starting_date } = formData;
         console.log(loanAmount);
         console.log(loanTerm);
         console.log(paymentFrequency);
         const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
-        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
+        const monthly_Payment = this.monthlyPayment(formData, numberOfPayments);
         const lump_sum = {
             loanAmount,
             numberOfPayments,
-            monthlyPayment,
+            monthly_Payment,
             loanTerm,
-            //         interestRate,
-            //         totalInterest,
-            //         processingFee,
-            //         paymentFrequency,
+            starting_date,
         };
-        return lump_sum;
+        const lump_sum_Monthly_Payment = this.lump_sum_Monthly_Payment(lump_sum, monthly_Payment);
+        return { lump_sum, lump_sum_Monthly_Payment };
     },
     calculateDiminishingInterest(formData) {
-        const { loanAmount, loanTerm, paymentFrequency } = formData;
-        console.log(loanAmount);
-        console.log(loanTerm);
-        console.log(paymentFrequency);
+        const { loanAmount, loanTerm, paymentFrequency, starting_date } = formData;
         const numberOfPayments = this.calculateNumberOfPayments(loanTerm, paymentFrequency);
-        const monthlyPayment = this.monthlyPayment(formData, numberOfPayments);
-
-        //     const totalInterest = calculateTotalInterest(monthlyPayment, numberOfPayments, loanAmount);
-        //     const processingFee = calculateProcessingFee(loanAmount);
-        //     const extra_payments = calculateExtraPayments(loanAmount, processingFee, totalInterest);
+        const monthly_Payment = this.monthlyPayment(formData, numberOfPayments);
         const diminishing_interest = {
             loanAmount,
             numberOfPayments,
-            monthlyPayment,
-            //         loanTerm,
-            //         interestRate,
-            //         totalInterest,
-            //         processingFee,
-            //         paymentFrequency,
-            //         extra_payments
+            monthly_Payment,
+            loanTerm,
+            starting_date,
         };
-        return diminishing_interest;
+        const payment_table = this.diminishing_calculate_Monthly_Payment(diminishing_interest, paymentFrequency)
+        return { diminishing_interest, payment_table };
     },
     calculateNumberOfPayments(loanTerm, paymentFrequency) {
         let numberOfPayments = 0;
@@ -112,21 +86,24 @@ export const functions = {
             state.diminishing_interest.interestRate :
             state.fixed_interest.interestRate
         console.log(interestRate)
-
-        let totalInterestRate =
-            loan_type == 'diminishing-interest' ?
-            this.total_Interest_Rate(paymentFrequency, interestRate) :
-            loanAmount * interestRate * loanTerm;
+        const interest = this.total_Interest_Rate(paymentFrequency)
+        let totalInterestRate = 0;
+        if (loan_type == 'diminishing-interest') {
+            if (paymentFrequency === 1) {
+                totalInterestRate = interestRate;
+            } else {
+                totalInterestRate = interestRate / interest;
+            }
+        } else {
+            totalInterestRate = loanAmount * interestRate * loanTerm;
+        }
         console.log(totalInterestRate)
         switch (loan_type) {
             case "fixed-interest":
-                monthlyPayment = (
-                    (loanAmount + totalInterestRate) /
-                    numberOfPayments
-                ).toFixed(2);
+                monthlyPayment = ((loanAmount + totalInterestRate) / numberOfPayments);
                 break;
             case "lump-sum":
-                monthlyPayment = (totalInterestRate / numberOfPayments).toFixed(2);
+                monthlyPayment = (totalInterestRate / numberOfPayments);
                 break;
             case "diminishing-interest":
                 monthlyPayment = this.calculatePayment(totalInterestRate, numberOfPayments, loanAmount, 0);
@@ -137,25 +114,23 @@ export const functions = {
         }
         return { interestRate, monthlyPayment, totalInterestRate };
     },
-    total_Interest_Rate(paymentFrequency, interestRate) {
+    total_Interest_Rate(paymentFrequency) {
         let totalInterestRate = 0;
         switch (paymentFrequency) {
-            case "365":
-                totalInterestRate = interestRate / (365 / 12);
+            case 365:
+                totalInterestRate = (365 / 12);
                 break;
-            case "52":
-                totalInterestRate = interestRate / (52 / 12);
+            case 52:
+                totalInterestRate = (52 / 12);
                 break;
-            case "2":
-                totalInterestRate = interestRate / 2;
-                break;
-            case "1":
-                totalInterestRate = interestRate;
+            case 2:
+                totalInterestRate = 2;
                 break;
             default:
-                // handle invalid paymentFrequency value
+                totalInterestRate = 1;
                 break;
         }
+
         return totalInterestRate;
     },
     calculatePayment(interestRate, numberOfPayments, presentValue, futureValue, paymentType) {
@@ -177,7 +152,184 @@ export const functions = {
             payment /= 1 + interestRate;
         }
 
-        return payment.toFixed(2);
-    }
+        return payment;
+    },
+    diminishing_calculate_Monthly_Payment(data, paymentFrequency) {
+        let { loanAmount, numberOfPayments, monthly_Payment, starting_date } = data;
+        let { monthlyPayment, interestRate, totalInterestRate } = monthly_Payment;
 
+        let payments = [];
+        let payment = {};
+        let beginning_balance = loanAmount;
+        console.log(beginning_balance);
+        let ending_balance = beginning_balance;
+        let extra_payment = 0;
+        let paymentNumber = 1;
+        let interest = 0;
+        let principal = 0;
+        let totalAmount = 0;
+        let amount = 0;
+        let paymentDate = new Date(starting_date);
+        payment = {
+            paymentNumber: 0,
+            paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            beginning_balance: beginning_balance,
+            totalAmount: totalAmount,
+            interest: interest,
+            principal: principal,
+            extra_payment: extra_payment,
+            ending_balance: ending_balance,
+        };
+        // push payment object to payments array
+        payments.push(payment);
+        // loop through the number of payments
+        for (let i = 0; i < numberOfPayments; i++) {
+            beginning_balance = ending_balance;
+            interest = beginning_balance * interestRate / this.total_Interest_Rate(paymentFrequency);
+            amount = beginning_balance + interest;
+            totalAmount = Math.min(monthlyPayment, amount);
+            principal = totalAmount - interest;
+            console.log(principal + '')
+            extra_payment = 0;
+            ending_balance = beginning_balance - principal - extra_payment;
+            totalInterestRate = totalInterestRate + interest;
+            paymentDate.setMonth(paymentDate.getMonth() + 1);
+            payment = {
+                paymentNumber: paymentNumber,
+                paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                beginning_balance: beginning_balance,
+                totalAmount: totalAmount,
+                interest: interest,
+                principal: principal,
+                extra_payment: extra_payment,
+                ending_balance: ending_balance,
+            };
+            // round the values before pushing to the payments array
+            payment.beginning_balance = this.roundToTwoDecimalPlaces(payment.beginning_balance);
+            payment.totalAmount = this.roundToTwoDecimalPlaces(payment.totalAmount);
+            payment.interest = this.roundToTwoDecimalPlaces(payment.interest);
+            payment.principal = this.roundToTwoDecimalPlaces(payment.principal);
+            payment.extra_payment = this.roundToTwoDecimalPlaces(payment.extra_payment);
+            payment.ending_balance = this.roundToTwoDecimalPlaces(payment.ending_balance);
+            payments.push(payment);
+            paymentNumber++;
+        }
+        console.table(payments);
+        return payments;
+    },
+    roundToTwoDecimalPlaces(num) {
+        return Math.round(num * 100) / 100;
+    },
+    fixed_calculate_Monthly_Payment(data) {
+        let { loanAmount, numberOfPayments, monthly_Payment, starting_date } = data;
+        let { totalInterestRate } = monthly_Payment;
+
+        let payments = [];
+        let payment = {};
+        let beginning_balance = loanAmount;
+        console.log(beginning_balance);
+        let extra_payment = 0;
+        let paymentNumber = 1;
+        let interest = 0;
+        let principal = 0;
+        let totalAmount = 0;
+        let paymentDate = new Date(starting_date);
+        let ending_balance = beginning_balance - principal - extra_payment;
+
+        payment = {
+            paymentNumber: 1,
+            paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            beginning_balance: beginning_balance,
+            totalAmount: totalAmount,
+            interest: interest,
+            principal: principal,
+            extra_payment: extra_payment,
+            ending_balance: ending_balance,
+        };
+        payments.push(payment);
+
+        for (let i = 0; i < numberOfPayments; i++) {
+            beginning_balance = paymentNumber > numberOfPayments ? 0 : ending_balance;
+            interest = beginning_balance <= 0.001 ? 0 : totalInterestRate / numberOfPayments;
+            principal = beginning_balance <= 0.001 ? 0 : Math.min(loanAmount / numberOfPayments, beginning_balance);
+            totalAmount = principal + interest;
+            ending_balance = beginning_balance - principal - extra_payment;
+            paymentDate = new Date(paymentDate.setMonth(paymentDate.getMonth() + 1));
+            payment = {
+                paymentNumber: paymentNumber,
+                paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                beginning_balance: beginning_balance,
+                totalAmount: totalAmount,
+                interest: interest,
+                principal: principal,
+                extra_payment: extra_payment,
+                ending_balance: ending_balance,
+            };
+            // round the values before pushing to the payments array
+            payment.beginning_balance = this.roundToTwoDecimalPlaces(payment.beginning_balance);
+            payment.totalAmount = this.roundToTwoDecimalPlaces(payment.totalAmount);
+            payment.interest = this.roundToTwoDecimalPlaces(payment.interest);
+            payment.principal = this.roundToTwoDecimalPlaces(payment.principal);
+            payment.ending_balance = this.roundToTwoDecimalPlaces(payment.ending_balance);
+            payments.push(payment);
+            paymentNumber++;
+        }
+        console.table(payments);
+        return payments;
+    },
+    lump_sum_Monthly_Payment(data, paymentFrequency) {
+        let { loanAmount, numberOfPayments, monthly_Payment, starting_date } = data;
+        let { interestRate } = monthly_Payment;
+
+        let payments = [];
+        let paymentNumber = 1;
+        let principal = 0;
+        let interest = 0;
+        let payment = {};
+        let beginning_balance = loanAmount;
+        let paymentDate = new Date(starting_date);
+        let extra_payment = 0;
+        let ending_balance = beginning_balance - principal - extra_payment;
+        payment = {
+            paymentNumber: 0,
+            paymentDate: paymentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            beginning_balance: beginning_balance,
+            interest: interest,
+            principal: principal,
+            extra_payment: extra_payment,
+            ending_balance: ending_balance,
+        };
+        // push payment object to payments array
+        payments.push(payment);
+
+        // loop through the number of payments
+        for (let i = 0; i < numberOfPayments; i++) {
+            beginning_balance = paymentNumber > numberOfPayments ? 0 : ending_balance;
+            interest = beginning_balance * interestRate / this.total_Interest_Rate(paymentFrequency);
+            principal = paymentNumber == numberOfPayments ? beginning_balance : 0;
+            ending_balance = beginning_balance - principal;
+            // calculate payment date
+            paymentDate = new Date(
+                paymentDate.setMonth(paymentDate.getMonth() + 1)
+            );
+            payment = {
+                paymentNumber: paymentNumber,
+                paymentDate: paymentDate.toLocaleDateString(),
+                beginning_balance: beginning_balance,
+                interest: interest,
+                principal: principal,
+                extra_payment: extra_payment,
+                ending_balance: ending_balance,
+            };
+            // round the values before pushing to the payments array
+            payment.beginning_balance = this.roundToTwoDecimalPlaces(payment.beginning_balance);
+            payment.interest = this.roundToTwoDecimalPlaces(payment.interest);
+            payment.principal = this.roundToTwoDecimalPlaces(payment.principal);
+            payment.ending_balance = this.roundToTwoDecimalPlaces(payment.ending_balance);
+            payments.push(payment);
+            paymentNumber++;
+        }
+        console.table(payments);
+        return payments;
+    }
 };

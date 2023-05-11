@@ -29,6 +29,19 @@
         :id="paymentFrequency.name"
         :default="paymentFrequency.default"
       />
+      <DateElement
+        name="date"
+        label="Starting Date"
+        id="date"
+        field-name="Starting Date"
+        :display-format="date_format"
+        :value-format="date_format"
+        :load-format="date_format"
+        :default="getCurrentDate"
+        :v-model="startingDate"
+        :disabled-dates="disabledDates"
+        @change="onChange($event)"
+      />
     </GroupElement>
     <StaticElement name="divider_1" :content="dividerContent" />
     <ButtonElement
@@ -54,25 +67,34 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from "vuex";
-
+  import { mapGetters, mapState, mapActions } from "vuex";
+  import { disabledDates } from "../../store/modules/common/shared";
   export default {
     name: "LoanCalculator",
+    data() {
+      return {
+        startingDate: new Date(),
+      };
+    },
     props: {
       // Define props here
       default: {
-        type: [String, Function],
+        type: [String, Date, Function],
         default: null,
       },
       loanType: {
         type: String,
-        required: true,
+        // required: true,
       },
     },
     computed: {
       ...mapState({
         loan_type: (state) => state.destinationsStore.loan_type.loan_type,
       }),
+      currentDate() {
+        return this.getCurrentDate;
+      },
+      ...mapGetters("penalty_calculator", ["getCurrentDate"]),
       ...mapState("loanCalculator", [
         "inputsData",
         "paymentFrequency",
@@ -80,15 +102,27 @@
         "rules",
         "min",
         "resetConditions",
+        "starting_date",
       ]),
+      ...mapState("penalty_calculator", ["date_format"]),
+      ...mapGetters("penalty_calculator", ["getCurrentDate"]),
     },
     methods: {
+      disabledDates() {
+        return disabledDates;
+      },
+      onChange(value) {
+        console.log(value);
+        this.starting_date = value;
+      },
       ...mapActions("loanCalculator", ["calculatePayment"]),
       triggerCalculatePayment() {
         const formData = this.$refs.vueform.data;
         const loan_type = this.$route.params.slug;
-        formData['loan_type'] = loan_type;
+        formData["loan_type"] = loan_type;
+        formData["starting_date"] = this.starting_date;
         console.log(formData);
+        console.log(this.starting_date);
         this.$store
           .dispatch("loanCalculator/calculatePayment", {
             formData,

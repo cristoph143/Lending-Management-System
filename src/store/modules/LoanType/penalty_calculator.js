@@ -1,5 +1,6 @@
 // store/modules/penaltyCalculator.js
 import store from '@/store';
+import { shared } from '../common/shared';
 const state = {
     errorMessage: "",
     dates: ["dueDate", "actualDate"],
@@ -36,7 +37,7 @@ const state = {
 };
 
 const getters = {
-    getCurrentDate: () => getCurrentDate(),
+    getCurrentDate: () => shared.getCurrentDate(),
     capitalizedString: (state) => (date) => {
         return state.capitalizedStrings[date] || '';
     },
@@ -51,22 +52,8 @@ const actions = {
     onChange({ commit, state }, { date, event }) {
         commit("SET_FORM_DATA", {...state.formData, [date]: event });
     },
-    capitalize({ commit }, str) {
-        console.log(str)
-        console.log(str + ": " + str);
-        let result = str.replace(/([A-Z])/g, " $1");
-        result = result.charAt(0).toUpperCase() + result.slice(1);
-        console.log(result)
-        commit('SET_CAPITALIZED_STRING', result);
-        return result;
-
-    },
     capitalizeString({ commit }, date) {
-        console.log(date)
-        console.log(date + ": " + date);
-        let result = date.replace(/([A-Z])/g, " $1");
-        result = result.charAt(0).toUpperCase() + result.slice(1);
-        console.log(result)
+        const result = shared.capitalize(date);
         commit('SET_CAPITALIZED_STRING', { date, str: result });
         return result;
     },
@@ -84,10 +71,10 @@ const actions = {
 
         // Set actualDate and dueDate to current date if they are empty strings
         if (state.formData.actualDate === "") {
-            state.formData.actualDate = getCurrentDate();
+            state.formData.actualDate = shared.getCurrentDate();
         }
         if (state.formData.dueDate === "") {
-            state.formData.dueDate = getCurrentDate();
+            state.formData.dueDate = shared.getCurrentDate();
         }
         console.log(state.formData)
 
@@ -116,7 +103,7 @@ const actions = {
     // other actions
     fetchCurrentDate({ commit }) {
         console.log('Fetching current date...');
-        const date = getCurrentDate();
+        const date = shared.getCurrentDate();
         commit('setCurrentDate', date);
     },
 };
@@ -128,8 +115,8 @@ const mutations = {
     RESET_FORM(state) {
         state.formData = {
             amountDue: 0,
-            dueDate: getCurrentDate(),
-            actualDate: getCurrentDate(),
+            dueDate: shared.getCurrentDate(),
+            actualDate: shared.getCurrentDate(),
         };
     },
     SET_CAPITALIZED_STRING(state, { date, str }) {
@@ -144,16 +131,6 @@ const mutations = {
         state.paymentResult = paymentResult;
     },
 };
-
-function getCurrentDate() {
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
-    return formattedDate;
-}
 
 export default {
     namespaced: true,
