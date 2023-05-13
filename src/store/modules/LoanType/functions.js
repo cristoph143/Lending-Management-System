@@ -31,10 +31,10 @@ export const functions = {
             loanTerm,
             starting_date,
         };
-        const calculate_fixed_Monthly_Payment = this.fixed_calculate_Monthly_Payment(fixed_interest);
+        const payment_table = this.fixed_calculate_Monthly_Payment(fixed_interest);
         // const diminishingInterest =this.diminishing_calculate_fixed_Monthly_Payment(formData, fixed_interest);
-        console.log(calculate_fixed_Monthly_Payment);
-        return { fixed_interest, calculate_fixed_Monthly_Payment };
+        console.log(payment_table);
+        return { fixed_interest, payment_table };
         // return {fixed_interest, diminishingInterest};
     },
     calculateLumpSum(formData) {
@@ -51,8 +51,8 @@ export const functions = {
             loanTerm,
             starting_date,
         };
-        const lump_sum_Monthly_Payment = this.lump_sum_Monthly_Payment(lump_sum, monthly_Payment);
-        return { lump_sum, lump_sum_Monthly_Payment };
+        const payment_table = this.lump_sum_Monthly_Payment(lump_sum, monthly_Payment);
+        return { lump_sum, payment_table };
     },
     calculateDiminishingInterest(formData) {
         const { loanAmount, loanTerm, paymentFrequency, starting_date } = formData;

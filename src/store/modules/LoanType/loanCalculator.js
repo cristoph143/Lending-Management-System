@@ -33,6 +33,7 @@ const state = {
         ],
     ],
     loanType: "",
+    tableHeaders: ['Payment #', 'Month', 'Starting Balance', 'Total', 'Interest', 'Principal', 'Extra Payment', 'Ending Balance'],
 };
 const mutations = {
     SET_LOAN_TYPE(state, loanType) {

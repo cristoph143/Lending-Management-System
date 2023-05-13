@@ -13,6 +13,7 @@ const state = {
     diminishing_interest: {
         interestRate: 0.01,
     },
+    tableHeaders: ['Payment #', 'Month', 'Starting Balance', 'Total', 'Interest', 'Principal', 'Extra Payment', 'Ending Balance'],
 };
 
 const actions = {
@@ -44,19 +45,22 @@ const actions = {
                 {
                     const fixed_interestResult = functions.calculateFixedInterest(formData);
                     console.log(fixed_interestResult);
-                    commit("SET_FIXED_INTEREST", fixed_interestResult);
+                    commit("SET_FIXED_INTEREST", fixed_interestResult.fixed_interest);
+                    commit("SET_PAYMENT_TABLE", fixed_interestResult.payment_table)
                     return fixed_interestResult;
                 }
             case "lump-sum":
                 {
                     const lump_sum = functions.calculateLumpSum(formData);
-                    commit("SET_LUMP_SUM", lump_sum);
+                    commit("SET_LUMP_SUM", lump_sum.lump_sum);
+                    commit("SET_PAYMENT_TABLE", lump_sum.payment_table)
                     return lump_sum;
                 }
             case "diminishing-interest":
                 {
                     const diminishing_interest = functions.calculateDiminishingInterest(formData);
-                    commit("SET_DIMINISHING_INTEREST", diminishing_interest);
+                    commit("SET_DIMINISHING_INTEREST", diminishing_interest.diminishing_interest);
+                    commit("SET_PAYMENT_TABLE", diminishing_interest.payment_table)
                     return diminishing_interest;
                 }
             default:
@@ -86,6 +90,35 @@ const mutations = {
         console.log(diminishing_interestResult)
         state.diminishing_interest.diminishing_interestResult = diminishing_interestResult;
     },
+    SET_PAYMENT_TABLE(state, payment_table) {
+        console.log(payment_table)
+        state.payment_table = payment_table;
+    },
+    UPDATE_EXTRA_PAYMENT(state, { rowIndex, extraPayment }) {
+        const row = state.tableData[rowIndex]
+        row[6] = extraPayment
+        const startingBalance = rowIndex === 0 ? this.state.initialBalance : state.tableData[rowIndex - 1][7]
+        const totalPayment = row[3] + extraPayment
+        const interestPayment = startingBalance * state.interestRate / 12
+        const principalPayment = totalPayment - interestPayment
+        const endingBalance = startingBalance - principalPayment
+        row[4] = interestPayment
+        row[5] = principalPayment
+        row[7] = endingBalance
+        for (let i = rowIndex + 1; i < state.tableData.length; i++) {
+            const prevRow = state.tableData[i - 1]
+            const currentRow = state.tableData[i]
+            const startingBalance = prevRow[7]
+            const totalPayment = currentRow[3] + currentRow[6]
+            const interestPayment = startingBalance * state.interestRate / 12
+            const principalPayment = totalPayment - interestPayment
+            const endingBalance = startingBalance - principalPayment
+            currentRow[2] = startingBalance
+            currentRow[4] = interestPayment
+            currentRow[5] = principalPayment
+            currentRow[7] = endingBalance
+        }
+    }
 };
 
 const getters = {
