@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <!-- <div class="table-responsive">
     <table class="table">
       <thead>
         <tr>
@@ -24,25 +24,59 @@
         </tr>
       </tbody>
     </table>
+  </div> -->
+  <div>
+    <q-table
+      :columns="tableHeaders"
+      :title=loan_type
+        :data="paymentData"
+        :rows-per-page-options="[5, 10, 15]"
+        :pagination="true"
+        
+      row-key="paymentNumber"
+      v-if="paymentData"
+    />
+    
+
+    <q-spinner v-else />
+    {{tableHeaders}}
+    {{paymentTableData}}
   </div>
 </template>
 
 
 <script>
-  import { mapState } from "vuex";
+  import { mapState, mapGetters } from "vuex";
   export default {
     name: "DisplayTable",
 
     computed: {
       ...mapState({
         paymentTableData: (state) => state.loan_type.formula,
-        tableHeaders: (state) => state.loan_type.formula.tableHeaders,
+        tableHeaders: (state) => state.loan_type.formula.tableHeaders.map(header => ({
+        name: header.name,
+        field: header.field,
+        sortable: true // add any other properties you need
+      })),
         loan_type: (state) => state.loan_type.formula.loan_type,
       }),
       showPaymentTable() {
         console.log("paymentTableData" + this.paymentTableData);
         return this.paymentTableData.length > 0;
       },
+      ...mapGetters(['paymentTableData']),
+    paymentData() {
+      // Get the payment data from the paymentTableData getter
+      const paymentData = this.paymentTableData;
+
+      // If the payment data is null, return null to indicate that it's not available yet
+      if (!paymentData) {
+        return null;
+      }
+
+      // Otherwise, return the payment data
+      return paymentData;
+    },
     },
     methods: {
       updateEndingBalances(rowIndex) {

@@ -13,7 +13,16 @@ const state = {
     diminishing_interest: {
         interestRate: 0.01,
     },
-    tableHeaders: ['Payment #', 'Month', 'Starting Balance', 'Total', 'Interest', 'Principal', 'Extra Payment', 'Ending Balance'],
+    tableHeaders: [
+        { name: 'Payment #', field: 'paymentNumber' },
+        { name: 'Month', field: 'paymentDate' },
+        { name: 'Starting Balance', field: 'beginning_balance' },
+        { name: 'Total', field: 'totalAmount' },
+        { name: 'Interest', field: 'interest' },
+        { name: 'Principal', field: 'principal' },
+        { name: 'Extra Payment', field: 'extraPayment', editable: true },
+        { name: 'Ending Balance', field: 'ending_balance' }
+    ]
 };
 
 const actions = {
@@ -122,7 +131,7 @@ const mutations = {
 };
 
 const getters = {
-    penaltyResult: (state) => state.penalty_calculator,
+    paymentTableData: (state) => state.penalty_calculator,
 };
 
 export default {
